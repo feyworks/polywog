@@ -7,6 +7,8 @@
     - [👍 Polywog may be for you if you...](#-polywog-may-be-for-you-if-you)
     - [👎 Polywog is not for you if you...](#-polywog-is-not-for-you-if-you)
     - [🔍 Want an alternative?](#-want-an-alternative)
+  - [💡 Getting started](#-getting-started)
+  - [💃 Join the community](#-join-the-community)
 
 # 🐸 Polywog
 
@@ -61,7 +63,7 @@ Making games and prototypes is a cool way to learn a programming language, we th
 ## 🤔 Is this for me?
 
 ### 👍 Polywog may be for you if you...
-- youwant to make weird and cool 2D indie games and prototypes
+- want to make weird and cool 2D indie games and prototypes
 - are interested in learning Rust in a playful, creative way
 - want a backend to build your own 2D engine on top of
 
@@ -80,3 +82,14 @@ we recommend checking out those great projects.
 If you want to stick with Rust but want a more opinionated but also more substantial project with
 a larger community, definitely check out [Bevy](https://bevy.org/)! They're cool folks making
 something very ambitious.
+
+## 💡 Getting started
+
+## 💃 Join the community
+
+Join our [{{Discord}}]() to chat, get help, report bugs, and share what you're working on!
+
+Check out our [{{Contributing}}]() page if you're interested in helping maintain and improve the
+project.
+
+Say hello to our mascot [{{MASCOT_NAME}}]().
