@@ -4,7 +4,7 @@
     - [🌐 Cross platform](#-cross-platform)
     - [👩‍🎓 Create while you learn](#-create-while-you-learn)
   - [🤔 Is this for me?](#-is-this-for-me)
-    - [� Polywog may be for you if you...](#-polywog-may-be-for-you-if-you)
+    - [👍 Polywog may be for you if you...](#-polywog-may-be-for-you-if-you)
     - [👎 Polywog is not for you if you...](#-polywog-is-not-for-you-if-you)
     - [🔍 Want an alternative?](#-want-an-alternative)
 
