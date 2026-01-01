@@ -1,0 +1,41 @@
+[workspace]
+resolver = "3"
+members = ["polywog", "crates/*", "examples/*"]
+default-members = ["polywog"]
+
+[workspace.package]
+authors = ["Chevy Ray Johnston"]
+license = "LICENSE"
+description = "Create 2D games in Rust."
+readme = "README.md"
+
+
+
+#name — The name of the package.
+#version — The version of the package.
+#authors — The authors of the package.
+#edition — The Rust edition.
+#rust-version — The minimal supported Rust version.
+#description — A description of the package.
+#documentation — URL of the package documentation.
+#readme — Path to the package’s README file.
+#homepage — URL of the package homepage.
+#repository — URL of the package source repository.
+#license — The package license.
+#license-file — Path to the text of the license.
+#keywords — Keywords for the package.
+#categories — Categories of the package.
+#workspace — Path to the workspace for the package.
+#build — Path to the package build script.
+#links — Name of the native library the package links with.
+#exclude — Files to exclude when publishing.
+#include — Files to include when publishing.
+#publish — Can be used to prevent publishing the package.
+#metadata — Extra settings for external tools.
+#default-run — The default binary to run by cargo run.
+#autolib — Disables library auto discovery.
+#autobins — Disables binary auto discovery.
+#autoexamples — Disables example auto discovery.
+#autotests — Disables test auto discovery.
+#autobenches — Disables bench auto discovery.
+#resolver — Sets the dependency resolver to use.

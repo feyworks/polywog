@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="EMPTY_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/crates/fey_color/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/fey_guid/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/fey_math/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/fey_packer/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/fey_rand/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/controller/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/minimal/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/platformer/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/screen/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/shaders/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/smooth_moves/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/surfaces/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/texture_packer/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/tiles/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/polywog/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/fey_grid/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/fey_img/src" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

@@ -1,0 +1,18 @@
+[package]
+name = "fey_img"
+version = "0.1.0"
+edition = "2024"
+authors.workspace = true
+license.workspace = true
+description.workspace = true
+readme.workspace = true
+
+[dependencies]
+bytemuck = "1.24.0"
+fey_color = { version = "0.1.0", path = "../fey_color" }
+fey_grid = { version = "0.1.0", path = "../fey_grid" }
+fey_math = { version = "0.1.0", path = "../fey_math" }
+png = "0.18.0"
+qoi = "0.4.1"
+serde = "1.0.228"
+thiserror = "2.0.17"
