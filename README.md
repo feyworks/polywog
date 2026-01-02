@@ -18,8 +18,8 @@ then gets out of your way. The rest is up to you!
 
 ## ✅ Features
 
-Polywog is a pure-code framework that programmers can use to code their games in or even use build
-their own game engines. It provides:
+Polywog is a pure-code framework that programmers can use to code their games or even to build their
+own game engines. It provides:
 
 - 🖥️ a window, game loop, and rendering context out of the box and ready to go
 - 🎮 mouse, keyboard, and gamepad input as well as virtual input mapping
@@ -33,7 +33,7 @@ their own game engines. It provides:
 
 ### 🧱 Just the basics
 
-The feature cutoff for Polywog is is very intentional, it is meant to isolate the ecosystem as a 2D
+The feature cutoff for Polywog is very intentional, it is meant to isolate the ecosystem as a 2D
 game development environment, but does not want to be too opinionated about what you are coding or
 how you code it.
 
