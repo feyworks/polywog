@@ -3,7 +3,7 @@ use crate::gfx::{Graphics, SubTexture, Texture};
 use crate::grid::{Grid, GridMut};
 use crate::img::ImageRgba8;
 use crate::math::{Numeric, RectF, RectU, Vec2F, Vec2U};
-use crate::packer::{Item, Packed, RectPacker};
+use fey_packer::{Item, Packed, RectPacker};
 use std::ops::Deref;
 use std::rc::Rc;
 

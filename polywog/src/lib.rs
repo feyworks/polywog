@@ -19,9 +19,6 @@ pub use fey_img as img;
 pub use fey_math as math;
 
 #[doc(inline)]
-pub use fey_packer as packer;
-
-#[doc(inline)]
 pub use fey_rand as rand;
 
 pub use new_game::new_game;
@@ -36,6 +33,5 @@ pub mod prelude {
     pub use crate::img::*;
     pub use crate::input::*;
     pub use crate::math::*;
-    pub use crate::packer::*;
     pub use crate::rand::*;
 }

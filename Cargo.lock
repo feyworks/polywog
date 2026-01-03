@@ -566,6 +566,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "fey_font"
+version = "0.1.0"
+dependencies = [
+ "ab_glyph",
+ "fey_color",
+ "fey_grid",
+ "fey_img",
+ "fey_math",
+ "thiserror 2.0.17",
+]
+
+[[package]]
 name = "fey_grid"
 version = "0.1.0"
 dependencies = [

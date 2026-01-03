@@ -19,6 +19,7 @@
       <sourceFolder url="file://$MODULE_DIR$/polywog/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/crates/fey_grid/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/crates/fey_img/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/fey_font/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
