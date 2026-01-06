@@ -9,13 +9,16 @@ fn main() -> Result<(), GameError> {
 }
 
 pub struct TextExample {
-    font: Font,
-    font_tex: Texture,
+    noto: Font,
+    _noto_texture: Texture,
+    virtue: Font,
+    _virtue_texture: Texture,
 }
 
 impl Game for TextExample {
     fn new(ctx: &Context) -> Result<Self, GameError> {
-        let (font, font_tex) = Font::from_ttf_bytes(
+        // load a smooth font
+        let (noto, _noto_texture) = Font::from_ttf_bytes(
             &ctx.graphics,
             include_bytes!("../assets/NotoSans-Regular.ttf"),
             32.0,
@@ -23,7 +26,23 @@ impl Game for TextExample {
             BASIC_LATIN.chars(),
         )?
         .ok_or_else(|| GameError::custom("failed to load font"))?;
-        Ok(Self { font, font_tex })
+
+        // load a pixelated font
+        let (virtue, _virtue_texture) = Font::from_ttf_bytes(
+            &ctx.graphics,
+            include_bytes!("../assets/virtue.ttf"),
+            16.0,
+            true,
+            BASIC_LATIN.chars(),
+        )?
+        .ok_or_else(|| GameError::custom("failed to load font"))?;
+
+        Ok(Self {
+            noto,
+            _noto_texture,
+            virtue,
+            _virtue_texture,
+        })
     }
 
     fn update(&mut self, _ctx: &Context) -> Result<(), GameError> {
@@ -31,18 +50,27 @@ impl Game for TextExample {
     }
 
     fn render(&mut self, ctx: &Context, draw: &mut Draw) -> Result<(), GameError> {
-        //draw.push_scale_of(1.0 / ctx.window.scale_factor());
+        draw.push_scale_of(1.0 / ctx.window.scale_factor());
 
-        let mouse = ctx.mouse.pos();
+        // draw smooth text
         draw.text_ext(
-            &self.font,
+            &self.noto,
             "Thinking meat! You're asking me to believe in thinking meat!",
-            16.0,
-            mouse,
+            32.0,
+            vec2(75.0, 100.0),
             Rgba8::WHITE,
         );
 
-        //draw.pop_transform()?;
+        // draw pixelated text
+        draw.text_ext(
+            &self.virtue,
+            "Thinking meat! You're asking me to believe in thinking meat!",
+            48.0,
+            vec2(75.0, 150.0),
+            Rgba8::WHITE,
+        );
+
+        draw.pop_transform()?;
 
         Ok(())
     }
