@@ -40,6 +40,12 @@ impl Window {
         self.0.scale_factor() as f32
     }
 
+    /// The inverse window scale factor.
+    #[inline]
+    pub fn inv_scale_factor(&self) -> f32 {
+        self.scale_factor().recip()
+    }
+
     /// The monitor the window is on.
     #[inline]
     pub fn monitor(&self) -> Option<Monitor> {

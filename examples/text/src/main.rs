@@ -50,7 +50,7 @@ impl Game for TextExample {
     }
 
     fn render(&mut self, ctx: &Context, draw: &mut Draw) -> Result<(), GameError> {
-        draw.push_scale_of(1.0 / ctx.window.scale_factor());
+        draw.push_scale_of(ctx.window.inv_scale_factor());
 
         // draw smooth text
         draw.text_ext(
