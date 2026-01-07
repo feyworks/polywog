@@ -17,7 +17,7 @@ pub struct ShadersExample {
 impl Game for ShadersExample {
     type Config = ();
 
-    fn new(ctx: &Context, _cfg: &Self::Config) -> Result<Self, GameError>
+    fn new(ctx: &Context, _cfg: Self::Config) -> Result<Self, GameError>
     where
         Self: Sized,
     {

@@ -14,7 +14,7 @@ use winit::window::{WindowAttributes, WindowId};
 enum AppState<G: Game> {
     Startup {
         opts: GameBuilder,
-        cfg: G::Config,
+        cfg: Option<G::Config>,
     },
     Running {
         ctx: Context,
@@ -32,7 +32,10 @@ pub(crate) struct AppHandler<G: Game> {
 impl<G: Game> AppHandler<G> {
     pub(crate) fn new(opts: GameBuilder, cfg: G::Config) -> Self {
         Self {
-            state: AppState::Startup { opts, cfg },
+            state: AppState::Startup {
+                opts,
+                cfg: Some(cfg),
+            },
         }
     }
 }
@@ -78,7 +81,7 @@ impl<G: Game> ApplicationHandler for AppHandler<G> {
 
         // create the game
         // TODO: propagate error
-        let game = G::new(&ctx, cfg).unwrap();
+        let game = G::new(&ctx, cfg.take().unwrap()).unwrap();
 
         // start running the app loop
         self.state = AppState::Running {

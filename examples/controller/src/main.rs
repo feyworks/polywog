@@ -27,7 +27,7 @@ pub struct ControllerExample {
 impl Game for ControllerExample {
     type Config = ();
 
-    fn new(ctx: &Context, _cfg: &Self::Config) -> Result<Self, GameError>
+    fn new(ctx: &Context, _cfg: Self::Config) -> Result<Self, GameError>
     where
         Self: Sized,
     {

@@ -7,7 +7,7 @@ pub trait Game: 'static {
     type Config;
 
     /// Called when the game starts to load any startup assets and create your game state.
-    fn new(ctx: &Context, cfg: &Self::Config) -> Result<Self, GameError>
+    fn new(ctx: &Context, cfg: Self::Config) -> Result<Self, GameError>
     where
         Self: Sized;
 

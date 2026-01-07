@@ -15,7 +15,7 @@ pub struct SurfacesExample {
 impl Game for SurfacesExample {
     type Config = ();
 
-    fn new(ctx: &Context, _cfg: &Self::Config) -> Result<Self, GameError>
+    fn new(ctx: &Context, _cfg: Self::Config) -> Result<Self, GameError>
     where
         Self: Sized,
     {

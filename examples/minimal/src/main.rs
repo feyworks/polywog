@@ -15,7 +15,7 @@ pub struct MinimalExample {}
 impl Game for MinimalExample {
     type Config = ();
 
-    fn new(_ctx: &Context, _cfg: &Self::Config) -> Result<Self, GameError>
+    fn new(_ctx: &Context, _cfg: Self::Config) -> Result<Self, GameError>
     where
         Self: Sized,
     {

@@ -35,7 +35,7 @@ fn spr(ctx: &Context, bytes: &[u8]) -> Result<Texture, GameError> {
 impl Game for SubTexturesExample {
     type Config = ();
 
-    fn new(ctx: &Context, _cfg: &Self::Config) -> Result<Self, GameError>
+    fn new(ctx: &Context, _cfg: Self::Config) -> Result<Self, GameError>
     where
         Self: Sized,
     {
