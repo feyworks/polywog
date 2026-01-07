@@ -5,7 +5,7 @@ fn main() -> Result<(), GameError> {
     polywog::new_game()
         .with_title("Shaders")
         .with_size(960, 640)
-        .run::<ShadersExample>()
+        .run::<ShadersExample>(())
 }
 
 pub struct ShadersExample {
@@ -15,7 +15,12 @@ pub struct ShadersExample {
 }
 
 impl Game for ShadersExample {
-    fn new(ctx: &Context) -> Result<Self, GameError> {
+    type Config = ();
+
+    fn new(ctx: &Context, _cfg: &Self::Config) -> Result<Self, GameError>
+    where
+        Self: Sized,
+    {
         // load the shader file
         let invert_shader = ctx
             .graphics

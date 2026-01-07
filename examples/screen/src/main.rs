@@ -5,7 +5,7 @@ fn main() -> Result<(), GameError> {
     polywog::new_game()
         .with_title("Screen")
         .with_size(1280, 720)
-        .run::<ScreenExample>()
+        .run::<ScreenExample>(())
 }
 
 pub struct ScreenExample {
@@ -13,7 +13,12 @@ pub struct ScreenExample {
 }
 
 impl Game for ScreenExample {
-    fn new(ctx: &Context) -> Result<Self, GameError> {
+    type Config = ();
+
+    fn new(ctx: &Context, _cfg: &Self::Config) -> Result<Self, GameError>
+    where
+        Self: Sized,
+    {
         let screen = Screen::new_frame(ctx, (320, 180), false);
         // let screen = Screen::new_fill(ctx, 5.0);
 

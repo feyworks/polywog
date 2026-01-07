@@ -36,9 +36,9 @@ impl GameBuilder {
     }
 
     /// Run your game.
-    pub fn run<G: Game>(self) -> Result<(), GameError> {
+    pub fn run<G: Game>(self, cfg: G::Config) -> Result<(), GameError> {
         let event_loop = EventLoop::new()?;
-        event_loop.run_app(&mut AppHandler::new::<G>(self))?;
+        event_loop.run_app(&mut AppHandler::<G>::new(self, cfg))?;
         Ok(())
     }
 }

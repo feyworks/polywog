@@ -5,7 +5,7 @@ fn main() -> Result<(), GameError> {
     polywog::new_game()
         .with_title("Text")
         .with_size(1280, 720)
-        .run::<TextExample>()
+        .run::<TextExample>(())
 }
 
 pub struct TextExample {
@@ -16,7 +16,12 @@ pub struct TextExample {
 }
 
 impl Game for TextExample {
-    fn new(ctx: &Context) -> Result<Self, GameError> {
+    type Config = ();
+
+    fn new(ctx: &Context, _cfg: &Self::Config) -> Result<Self, GameError>
+    where
+        Self: Sized,
+    {
         // load a smooth font
         let (noto, _noto_texture) = Font::from_ttf_bytes(
             &ctx.graphics,

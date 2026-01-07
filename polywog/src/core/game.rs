@@ -3,8 +3,11 @@ use crate::gfx::Draw;
 
 /// Represents a game that can be passed to [`new_game()`](crate::new_game).
 pub trait Game: 'static {
+    /// Optional configuration that can be passed into [new()](Game::new).
+    type Config;
+
     /// Called when the game starts to load any startup assets and create your game state.
-    fn new(ctx: &Context) -> Result<Self, GameError>
+    fn new(ctx: &Context, cfg: &Self::Config) -> Result<Self, GameError>
     where
         Self: Sized;
 

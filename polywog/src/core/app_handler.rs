@@ -1,6 +1,6 @@
 use super::Game;
 use crate::core::frame_timer::FrameTimer;
-use crate::core::{Context, GameBuilder, GameError, Time, Window};
+use crate::core::{Context, GameBuilder, Time, Window};
 use crate::gfx::{Draw, Graphics};
 use crate::input::{Gamepads, Keyboard, Mouse};
 use dpi::LogicalSize;
@@ -11,38 +11,35 @@ use winit::event::WindowEvent;
 use winit::event_loop::ActiveEventLoop;
 use winit::window::{WindowAttributes, WindowId};
 
-enum AppState {
+enum AppState<G: Game> {
     Startup {
         opts: GameBuilder,
-        game_fn: fn(&Context) -> Result<Box<dyn Game>, GameError>,
+        cfg: G::Config,
     },
     Running {
         ctx: Context,
         draw: Draw,
         timer: FrameTimer,
         size: LogicalSize<f64>,
-        game: Box<dyn Game>,
+        game: G,
     },
 }
 
-pub(crate) struct AppHandler {
-    state: AppState,
+pub(crate) struct AppHandler<G: Game> {
+    state: AppState<G>,
 }
 
-impl AppHandler {
-    pub(crate) fn new<G: Game>(opts: GameBuilder) -> Self {
+impl<G: Game> AppHandler<G> {
+    pub(crate) fn new(opts: GameBuilder, cfg: G::Config) -> Self {
         Self {
-            state: AppState::Startup {
-                opts,
-                game_fn: |ctx| Ok(Box::new(G::new(ctx)?)),
-            },
+            state: AppState::Startup { opts, cfg },
         }
     }
 }
 
-impl ApplicationHandler for AppHandler {
+impl<G: Game> ApplicationHandler for AppHandler<G> {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
-        let AppState::Startup { opts, game_fn } = &mut self.state else {
+        let AppState::Startup { opts, cfg } = &mut self.state else {
             return;
         };
 
@@ -81,7 +78,7 @@ impl ApplicationHandler for AppHandler {
 
         // create the game
         // TODO: propagate error
-        let game = game_fn(&ctx).unwrap();
+        let game = G::new(&ctx, cfg).unwrap();
 
         // start running the app loop
         self.state = AppState::Running {

@@ -7,7 +7,7 @@ fn main() -> Result<(), GameError> {
     polywog::new_game()
         .with_title("SubTextures")
         .with_size(640, 640)
-        .run::<SubTexturesExample>()
+        .run::<SubTexturesExample>(())
 }
 
 pub struct SubTexturesExample {
@@ -15,7 +15,12 @@ pub struct SubTexturesExample {
 }
 
 impl Game for SubTexturesExample {
-    fn new(ctx: &Context) -> Result<Self, GameError> {
+    type Config = ();
+
+    fn new(ctx: &Context, _cfg: &Self::Config) -> Result<Self, GameError>
+    where
+        Self: Sized,
+    {
         // embed a PNG into the executable and load it as a PNG
         let bytes = include_bytes!("../assets/nethack.png");
         let tex = ctx.graphics.load_png_from_memory(bytes, true)?;

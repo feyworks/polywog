@@ -7,7 +7,7 @@ fn main() -> Result<(), GameError> {
     polywog::new_game()
         .with_title("Smooth Moves")
         .with_size(1280, 720)
-        .run::<SmoothMovesExample>()
+        .run::<SmoothMovesExample>(())
 }
 
 pub struct SmoothMovesExample {
@@ -17,7 +17,12 @@ pub struct SmoothMovesExample {
 }
 
 impl Game for SmoothMovesExample {
-    fn new(ctx: &Context) -> Result<Self, GameError> {
+    type Config = ();
+
+    fn new(ctx: &Context, _cfg: &Self::Config) -> Result<Self, GameError>
+    where
+        Self: Sized,
+    {
         let mouse = ctx.mouse.pos();
         Ok(Self {
             small_pos: mouse,

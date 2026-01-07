@@ -5,7 +5,7 @@ fn main() -> Result<(), GameError> {
     polywog::new_game()
         .with_title("Surfaces")
         .with_size(1280, 720)
-        .run::<SurfacesExample>()
+        .run::<SurfacesExample>(())
 }
 
 pub struct SurfacesExample {
@@ -13,7 +13,12 @@ pub struct SurfacesExample {
 }
 
 impl Game for SurfacesExample {
-    fn new(ctx: &Context) -> Result<Self, GameError> {
+    type Config = ();
+
+    fn new(ctx: &Context, _cfg: &Self::Config) -> Result<Self, GameError>
+    where
+        Self: Sized,
+    {
         // create a surface that we can render our pattern to
         let pattern = ctx.graphics.create_rgba8_surface((80, 80));
         Ok(Self { pattern })

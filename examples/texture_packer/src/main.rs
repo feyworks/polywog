@@ -9,7 +9,7 @@ fn main() -> Result<(), GameError> {
     polywog::new_game()
         .with_title("Texture Packer")
         .with_size(1280, 720)
-        .run::<TexturePackerExample>()
+        .run::<TexturePackerExample>(())
 }
 
 pub struct TexturePackerExample {
@@ -18,7 +18,12 @@ pub struct TexturePackerExample {
 }
 
 impl Game for TexturePackerExample {
-    fn new(ctx: &Context) -> Result<Self, GameError> {
+    type Config = ();
+
+    fn new(ctx: &Context, _cfg: &Self::Config) -> Result<Self, GameError>
+    where
+        Self: Sized,
+    {
         let path = Path::new(env!("CARGO_MANIFEST_DIR")).join("assets");
 
         let mut packer = TexturePacker::new();

@@ -14,7 +14,7 @@ fn main() -> Result<(), GameError> {
     polywog::new_game()
         .with_title("Platformer")
         .with_size(NATIVE_RES.x * UPSCALE, NATIVE_RES.y * UPSCALE)
-        .run::<SubTexturesExample>()
+        .run::<SubTexturesExample>(())
 }
 
 pub struct SubTexturesExample {
@@ -33,7 +33,12 @@ fn spr(ctx: &Context, bytes: &[u8]) -> Result<Texture, GameError> {
 }
 
 impl Game for SubTexturesExample {
-    fn new(ctx: &Context) -> Result<Self, GameError> {
+    type Config = ();
+
+    fn new(ctx: &Context, _cfg: &Self::Config) -> Result<Self, GameError>
+    where
+        Self: Sized,
+    {
         Ok(Self {
             guy: Guy::new(ctx),
             level: Level::make_level(),

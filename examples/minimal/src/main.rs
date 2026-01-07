@@ -7,13 +7,18 @@ fn main() -> Result<(), GameError> {
     polywog::new_game()
         .with_title("Minimal")
         .with_size(1280, 720)
-        .run::<MinimalExample>()
+        .run::<MinimalExample>(())
 }
 
 pub struct MinimalExample {}
 
 impl Game for MinimalExample {
-    fn new(_ctx: &Context) -> Result<Self, GameError> {
+    type Config = ();
+
+    fn new(_ctx: &Context, _cfg: &Self::Config) -> Result<Self, GameError>
+    where
+        Self: Sized,
+    {
         // initialize your game state here, such as creating graphics resources, etc.
         Ok(Self {})
     }

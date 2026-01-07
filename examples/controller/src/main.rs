@@ -7,7 +7,7 @@ fn main() -> Result<(), GameError> {
     polywog::new_game()
         .with_title("Controller")
         .with_size(1280, 720)
-        .run::<ControllerExample>()
+        .run::<ControllerExample>(())
 }
 
 pub struct ControllerExample {
@@ -25,7 +25,12 @@ pub struct ControllerExample {
 }
 
 impl Game for ControllerExample {
-    fn new(ctx: &Context) -> Result<Self, GameError> {
+    type Config = ();
+
+    fn new(ctx: &Context, _cfg: &Self::Config) -> Result<Self, GameError>
+    where
+        Self: Sized,
+    {
         let screen = Screen::new_frame(ctx, (160, 90), false);
         let controller = VirtualController::basic(ctx);
 
