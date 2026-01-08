@@ -8,7 +8,7 @@ description.workspace = true
 readme.workspace = true
 
 [features]
-lua = ["dep:mlua"]
+lua = ["dep:mlua", "dep:fey_lua", "fey_math/lua"]
 
 [dependencies]
 arrayvec = "0.7.6"
@@ -20,6 +20,7 @@ fey_font = { version = "0.1.0", path = "../crates/fey_font" }
 fey_grid = { version = "0.1.0", path = "../crates/fey_grid" }
 fey_guid = { version = "0.1.0", path = "../crates/fey_guid" }
 fey_img = { version = "0.1.0", path = "../crates/fey_img" }
+fey_lua = { version = "0.1.0", path = "../crates/fey_lua", optional = true }
 fey_math = { version = "0.1.0", path = "../crates/fey_math" }
 fey_packer = { version = "0.1.0", path = "../crates/fey_packer" }
 fey_rand = { version = "0.1.0", path = "../crates/fey_rand" }

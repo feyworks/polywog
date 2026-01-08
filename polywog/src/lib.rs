@@ -5,7 +5,7 @@ pub mod misc;
 mod new_game;
 
 #[cfg(feature = "lua")]
-pub mod lua;
+pub use fey_lua as lua;
 
 #[cfg(feature = "lua")]
 mod lua_modules;

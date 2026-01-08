@@ -1,6 +1,8 @@
 use crate::{Cardinal, Float, Octal, Radians, Rotations, impl_angle};
 use serde::{Deserialize, Serialize};
 
+pub type DegreesF = Degrees<f32>;
+
 /// An angle represented in degrees.
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 #[serde(transparent)]

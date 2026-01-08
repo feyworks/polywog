@@ -1,4 +1,4 @@
-use crate::lua::{Temp, UserDataOf};
+use crate::{Temp, UserDataOf};
 use mlua::prelude::{LuaError, LuaResult};
 use mlua::{FromLua, Lua, UserData, Value};
 use std::any::type_name;

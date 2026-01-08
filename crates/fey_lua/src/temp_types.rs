@@ -1,14 +1,15 @@
-use crate::lua::TempInfo;
-use crate::lua::ops::Ops;
+use crate::ops::Ops;
+use crate::{Temp, TempInfo};
 use fnv::FnvHashMap;
 use mlua::prelude::{LuaError, LuaResult};
 use mlua::{FromLua, LightUserData, Lua, MultiValue, Value};
 use std::any::{Any, TypeId};
+use std::marker::PhantomData;
 
-pub(crate) struct TempTypes {
-    pub version: u16,
-    pub types: Vec<TempTypeInfo>,
-    pub type_indices: FnvHashMap<TypeId, usize>,
+pub struct TempTypes {
+    pub(crate) version: u16,
+    pub(crate) types: Vec<TempTypeInfo>,
+    pub(crate) type_indices: FnvHashMap<TypeId, usize>,
 }
 
 impl TempTypes {
@@ -76,17 +77,17 @@ impl TempTypes {
         Ok(())
     }
 
-    // pub fn try_get_temp<T: 'static>(&self, data: LightUserData) -> Option<Temp<T>> {
-    //     let info = TempInfo::from(data);
-    //     let ty_idx = info.type_idx as usize;
-    //     if *self.type_indices.get(&TypeId::of::<T>())? != ty_idx {
-    //         return None;
-    //     }
-    //     Some(Temp {
-    //         info,
-    //         marker: PhantomData,
-    //     })
-    // }
+    pub fn try_get_temp<T: 'static>(&self, data: LightUserData) -> Option<Temp<T>> {
+        let info = TempInfo::from(data);
+        let ty_idx = info.type_idx as usize;
+        if *self.type_indices.get(&TypeId::of::<T>())? != ty_idx {
+            return None;
+        }
+        Some(Temp {
+            info,
+            marker: PhantomData,
+        })
+    }
 
     pub fn clear_frame(&mut self) {
         self.version = self.version.wrapping_add(1);

@@ -30,6 +30,9 @@ mod vec2;
 mod vec3;
 mod vec4;
 
+#[cfg(feature = "lua")]
+pub mod lua;
+
 pub use affine2::*;
 pub use affine3::*;
 pub use angle::*;
@@ -59,3 +62,6 @@ pub use triangle::*;
 pub use vec2::*;
 pub use vec3::*;
 pub use vec4::*;
+
+#[cfg(feature = "lua")]
+pub use lua::*;

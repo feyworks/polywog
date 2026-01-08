@@ -143,3 +143,10 @@ impl<T: 'static> IntoLua for UserDataOf<T> {
         Ok(Value::UserData(self.data))
     }
 }
+
+impl<T: 'static> Into<AnyUserData> for UserDataOf<T> {
+    #[inline]
+    fn into(self) -> AnyUserData {
+        self.data
+    }
+}

@@ -1,4 +1,4 @@
-use crate::lua::{Temp, UserDataOf};
+use crate::{Temp, UserDataOf};
 use mlua::prelude::LuaResult;
 use mlua::{FromLua, Lua, UserData, UserDataRef, UserDataRefMut, Value};
 

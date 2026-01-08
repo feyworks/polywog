@@ -1,4 +1,4 @@
-use crate::lua::{Handle, TempMembers, TempTypeInfo, TempTypes, UserDataOf};
+use crate::{Handle, TempMembers, TempTypeInfo, TempTypes, UserDataOf};
 use mlua::prelude::{LuaError, LuaResult};
 use mlua::{
     BorrowedStr, FromLua, IntoLua, LightUserData, Lua, MultiValue, Table, UserDataMethods, Value,

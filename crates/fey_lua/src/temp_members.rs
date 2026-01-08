@@ -1,5 +1,5 @@
-use crate::lua::Handle;
-use crate::lua::ops::Ops;
+use crate::Handle;
+use crate::ops::Ops;
 use mlua::prelude::{LuaResult, LuaString};
 use mlua::{FromLua, FromLuaMulti, Function, IntoLuaMulti, Lua, MultiValue, Table, Value};
 use std::collections::HashMap;

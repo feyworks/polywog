@@ -623,12 +623,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "fey_lua"
+version = "0.1.0"
+dependencies = [
+ "fnv",
+ "mlua",
+]
+
+[[package]]
 name = "fey_math"
 version = "0.1.0"
 dependencies = [
  "approx",
  "bytemuck",
  "dpi",
+ "fey_lua",
+ "mlua",
  "serde",
 ]
 
@@ -1645,6 +1655,7 @@ dependencies = [
  "fey_grid",
  "fey_guid",
  "fey_img",
+ "fey_lua",
  "fey_math",
  "fey_packer",
  "fey_rand",

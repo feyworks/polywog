@@ -14,7 +14,7 @@ pub struct GameBuilder {
 
 impl GameBuilder {
     pub fn new() -> Result<Self, GameError> {
-        Ok(Self {
+        let this = Self {
             title: "New Game".to_string(),
             size: (1280, 720).into(),
 
@@ -24,7 +24,12 @@ impl GameBuilder {
                 crate::lua::TempTypes::init(&lua)?;
                 lua
             },
-        })
+        };
+
+        #[cfg(feature = "lua")]
+        let this = { this.with_modules::<fey_math::MathModules>()? };
+
+        Ok(this)
     }
 
     /// Set the title of the game window.
