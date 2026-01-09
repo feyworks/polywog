@@ -43,6 +43,7 @@ impl Gamepads {
         }))
     }
 
+    #[allow(unused_variables)]
     pub(crate) fn update(&self, ctx: &Context) {
         let Some(mut gilrs) = self.0.gilrs.as_ref().map(|g| g.borrow_mut()) else {
             return;

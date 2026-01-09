@@ -64,6 +64,7 @@ fn config(size: PhysicalSize<u32>, caps: &SurfaceCapabilities) -> SurfaceConfigu
 }
 
 impl Graphics {
+    #[allow(unused_variables)]
     pub(crate) fn new(window: Window, opts: &GameBuilder) -> Self {
         // create the instance
         let instance = {
