@@ -1,3 +1,4 @@
+mod create_fill;
 mod handle;
 mod handle_ref;
 mod instant_lua;
@@ -8,6 +9,7 @@ mod temp_members;
 mod temp_types;
 mod user_data_of;
 
+pub use create_fill::*;
 pub use handle::*;
 pub use handle_ref::*;
 pub use instant_lua::*;

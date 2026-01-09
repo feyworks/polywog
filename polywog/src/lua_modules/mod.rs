@@ -1,7 +1,12 @@
 mod blend_mode_lua;
 mod color_mode_lua;
+mod gamepad_lua;
 mod index_buffer_lua;
+mod key_lua;
+mod keyboard_lua;
 mod monitor_lua;
+mod mouse_button_lua;
+mod mouse_lua;
 mod sampler_lua;
 mod screen_lua;
 mod shader_lua;
@@ -15,8 +20,13 @@ mod video_mode_lua;
 mod window_lua;
 
 pub use color_mode_lua::*;
+pub use gamepad_lua::*;
 pub use index_buffer_lua::*;
+pub use key_lua::*;
+pub use keyboard_lua::*;
 pub use monitor_lua::*;
+pub use mouse_button_lua::*;
+pub use mouse_lua::*;
 pub use sampler_lua::*;
 pub use screen_lua::*;
 pub use shader_lua::*;

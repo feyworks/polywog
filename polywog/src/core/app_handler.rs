@@ -193,7 +193,7 @@ impl<G: Game> ApplicationHandler for AppHandler<G> {
                     ctx.time.set_state(time);
 
                     // update gamepad input
-                    ctx.gamepads.update();
+                    ctx.gamepads.update(ctx);
 
                     // update the game
                     // TODO: propagate this error somewhere

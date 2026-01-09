@@ -1,4 +1,5 @@
 use super::{Gamepad, GamepadAxis, GamepadButton, GamepadStatus};
+use crate::core::Context;
 use fnv::FnvHashMap;
 use gilrs::{Event, EventType, GamepadId, Gilrs};
 use smallvec::SmallVec;
@@ -22,8 +23,15 @@ impl Debug for Gamepads {
 
 struct State {
     gilrs: Option<RefCell<Gilrs>>,
-    gamepads: RefCell<FnvHashMap<GamepadId, Gamepad>>,
+    gamepads: RefCell<FnvHashMap<GamepadId, Pad>>,
     last_active: Cell<SystemTime>,
+}
+
+struct Pad {
+    pad: Gamepad,
+
+    #[cfg(feature = "lua")]
+    userdata: mlua::AnyUserData,
 }
 
 impl Gamepads {
@@ -35,7 +43,7 @@ impl Gamepads {
         }))
     }
 
-    pub(crate) fn update(&self) {
+    pub(crate) fn update(&self, ctx: &Context) {
         let Some(mut gilrs) = self.0.gilrs.as_ref().map(|g| g.borrow_mut()) else {
             return;
         };
@@ -50,29 +58,29 @@ impl Gamepads {
                 EventType::ButtonPressed(btn, _) => {
                     if let Ok(btn) = GamepadButton::try_from(btn) {
                         let pad = gamepads.get(&id).unwrap();
-                        pad.update_status(&gilrs, time);
-                        pad.handle_press(btn);
+                        pad.pad.update_status(&gilrs, time);
+                        pad.pad.handle_press(btn);
                     }
                 }
                 EventType::ButtonRepeated(btn, _) => {
                     if let Ok(btn) = GamepadButton::try_from(btn) {
                         let pad = gamepads.get(&id).unwrap();
-                        pad.update_status(&gilrs, time);
-                        pad.handle_repeat(btn);
+                        pad.pad.update_status(&gilrs, time);
+                        pad.pad.handle_repeat(btn);
                     }
                 }
                 EventType::ButtonReleased(btn, _) => {
                     if let Ok(btn) = GamepadButton::try_from(btn) {
                         let pad = gamepads.get(&id).unwrap();
-                        pad.update_status(&gilrs, time);
-                        pad.handle_release(btn);
+                        pad.pad.update_status(&gilrs, time);
+                        pad.pad.handle_release(btn);
                     }
                 }
                 EventType::ButtonChanged(btn, val, _) => {
                     if let Ok(btn) = GamepadButton::try_from(btn) {
                         let pad = gamepads.get(&id).unwrap();
-                        pad.update_status(&gilrs, time);
-                        pad.handle_button_change(btn, val);
+                        pad.pad.update_status(&gilrs, time);
+                        pad.pad.handle_button_change(btn, val);
                     }
                 }
                 EventType::AxisChanged(axis, val, _) => {
@@ -82,8 +90,8 @@ impl Gamepads {
                             _ => val,
                         };
                         let pad = gamepads.get(&id).unwrap();
-                        pad.update_status(&gilrs, time);
-                        pad.handle_axis_change(axis, val);
+                        pad.pad.update_status(&gilrs, time);
+                        pad.pad.handle_axis_change(axis, val);
                     }
                 }
                 EventType::Connected => {
@@ -91,11 +99,16 @@ impl Gamepads {
                     let name = pad.name().to_string();
                     let status = GamepadStatus::from(pad.power_info());
                     let pad = Gamepad::new(id, name, status, time);
+                    let pad = Pad {
+                        #[cfg(feature = "lua")]
+                        userdata: ctx.lua.upgrade().create_userdata(pad.clone()).unwrap(),
+                        pad,
+                    };
                     assert!(gamepads.insert(id, pad).is_none());
                 }
                 EventType::Disconnected => {
                     let pad = gamepads.remove(&id).unwrap();
-                    pad.disconnect();
+                    pad.pad.disconnect();
                 }
                 EventType::Dropped => {}
                 EventType::ForceFeedbackEffectCompleted => {}
@@ -107,21 +120,21 @@ impl Gamepads {
     #[inline]
     pub(crate) fn clear_phase(&self) {
         for pad in self.0.gamepads.borrow().values() {
-            pad.clear_phase();
+            pad.pad.clear_phase();
         }
     }
 
     #[inline]
     pub(crate) fn set_update_phase(&self) {
         for pad in self.0.gamepads.borrow().values() {
-            pad.set_update_phase();
+            pad.pad.set_update_phase();
         }
     }
 
     #[inline]
     pub(crate) fn set_render_phase(&self) {
         for pad in self.0.gamepads.borrow().values() {
-            pad.set_render_phase();
+            pad.pad.set_render_phase();
         }
     }
 
@@ -138,8 +151,20 @@ impl Gamepads {
             .gamepads
             .borrow()
             .values()
-            .cloned()
-            .collect::<SmallVec<[Gamepad; 8]>>()
+            .map(|pad| pad.pad.clone())
+            .collect::<SmallVec<[_; 8]>>()
+            .into_iter()
+    }
+
+    #[cfg(feature = "lua")]
+    #[inline]
+    pub fn all_lua(&self) -> impl Iterator<Item = mlua::AnyUserData> {
+        self.0
+            .gamepads
+            .borrow()
+            .values()
+            .map(|pad| pad.userdata.clone())
+            .collect::<SmallVec<[_; 8]>>()
             .into_iter()
     }
 
@@ -150,9 +175,22 @@ impl Gamepads {
             .gamepads
             .borrow()
             .values()
-            .filter(|pad| pad.was_connected())
-            .cloned()
-            .collect::<SmallVec<[Gamepad; 8]>>()
+            .filter(|pad| pad.pad.was_connected())
+            .map(|pad| pad.pad.clone())
+            .collect::<SmallVec<[_; 8]>>()
+            .into_iter()
+    }
+
+    #[cfg(feature = "lua")]
+    #[inline]
+    pub(crate) fn newly_connected_lua(&self) -> impl Iterator<Item = mlua::AnyUserData> {
+        self.0
+            .gamepads
+            .borrow()
+            .values()
+            .filter(|pad| pad.pad.was_connected())
+            .map(|pad| pad.userdata.clone())
+            .collect::<SmallVec<[_; 8]>>()
             .into_iter()
     }
 
@@ -169,7 +207,18 @@ impl Gamepads {
             .gamepads
             .borrow()
             .values()
-            .max_by_key(|pad| pad.last_update())
-            .cloned()
+            .max_by_key(|pad| pad.pad.last_update())
+            .map(|pad| pad.pad.clone())
+    }
+
+    #[cfg(feature = "lua")]
+    #[inline]
+    pub(crate) fn last_active_lua(&self) -> Option<mlua::AnyUserData> {
+        self.0
+            .gamepads
+            .borrow()
+            .values()
+            .max_by_key(|pad| pad.pad.last_update())
+            .map(|pad| pad.userdata.clone())
     }
 }
