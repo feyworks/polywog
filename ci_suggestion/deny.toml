@@ -1,0 +1,21 @@
+[licenses]
+version = 2
+allow = [
+    "Apache-2.0",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "CC0-1.0",
+    "ISC",
+    "MIT",
+    "MIT-0",
+    "MPL-2.0",
+    "Unicode-3.0",
+    "Zlib",
+]
+exceptions = [
+    { name = "aws-lc-sys", allow = ["OpenSSL"] },
+    { name = "webpki-roots", allow = ["CDLA-Permissive-2.0"] },
+]
+include-dev = true
+
+private = { ignore = true }
