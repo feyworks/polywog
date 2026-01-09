@@ -24,8 +24,7 @@ function module.new(width, height, format) end
 
 ---Size of the surface.
 ---@param self Surface
----@return integer width
----@return integer height
+---@return Vec2
 ---@nodiscard
 function methods.size(self) end
 

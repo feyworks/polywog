@@ -119,8 +119,7 @@ function Window.outer_y() end
 function Window.set_outer_pos(x, y) end
 
 ---Size of the window.
----@return integer
----@return integer
+---@return Vec2
 ---@nodiscard
 function Window.size() end
 
@@ -135,8 +134,7 @@ function Window.width() end
 function Window.height() end
 
 ---Outer size of the window.
----@return integer
----@return integer
+---@return Vec2
 ---@nodiscard
 function Window.outer_size() end
 

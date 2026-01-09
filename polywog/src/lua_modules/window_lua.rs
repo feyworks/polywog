@@ -149,7 +149,7 @@ impl LuaModule for WindowModule {
             "size",
             lua.create_function(|lua, _: ()| {
                 let ctx = Context::from_lua(lua);
-                Ok(ctx.window.size().to_f32())
+                Ok(ctx.window.size())
             })?,
         )?;
         m.set(
@@ -170,7 +170,7 @@ impl LuaModule for WindowModule {
             "outer_size",
             lua.create_function(|lua, _: ()| {
                 let ctx = Context::from_lua(lua);
-                Ok(ctx.window.outer_size().to_f32())
+                Ok(ctx.window.outer_size())
             })?,
         )?;
         m.set(

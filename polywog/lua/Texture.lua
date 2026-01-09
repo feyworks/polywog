@@ -45,8 +45,7 @@ function module.from_img(img) end
 
 ---Size of the texture.
 ---@param self Texture
----@return integer width
----@return integer height
+---@return Vec2
 ---@nodiscard
 function methods.size(self) end
 
