@@ -14,5 +14,5 @@ fn main() -> Result<(), GameError> {
         .run_lua()
 
     // the game code is now handed over to lua/Main.lua
-    // you can add your own Rust modules that will be made available via require "MyModule"
+    // you can add your own Rust modules that can be loaded by `require`
 }
