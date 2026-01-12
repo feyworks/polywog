@@ -203,7 +203,7 @@ function Draw.line(from, to, color) end
 ---Draw a line.
 ---@param line Line
 ---@param color Color
-function Draw.line(line, color) end
+function Draw.line_obj(line, color) end
 
 ---Draw lines connecting the series of points into a chain, optionally looping to the start.
 ---@param points Vec2[]
@@ -221,7 +221,7 @@ function Draw.triangle(a, b, c, color) end
 ---Draw a filled triangle.
 ---@param tri Triangle
 ---@param color Color
-function Draw.triangle(tri, color) end
+function Draw.triangle_obj(tri, color) end
 
 ---Draw a triangle outline.
 ---@param a Vec2
@@ -233,7 +233,7 @@ function Draw.triangle_outline(a, b, c, color) end
 ---Draw a triangle outline.
 ---@param tri Triangle
 ---@param color Color
-function Draw.triangle_outline(tri, color) end
+function Draw.triangle_obj_outline(tri, color) end
 
 ---Draw a filled quad.
 ---@param a Vec2
@@ -246,7 +246,7 @@ function Draw.quad(a, b, c, d, color) end
 ---Draw a filled quad.
 ---@param quad Quad
 ---@param color Color
-function Draw.quad(quad, color) end
+function Draw.quad_obj(quad, color) end
 
 ---Draw a quad outline.
 ---@param a Vec2
@@ -259,7 +259,7 @@ function Draw.quad_outline(a, b, c, d, color) end
 ---Draw a quad outline.
 ---@param quad Quad
 ---@param color Color
-function Draw.quad_outline(quad, color) end
+function Draw.quad_obj_outline(quad, color) end
 
 ---Draw a filled rectangle.
 ---@param x number
@@ -272,7 +272,7 @@ function Draw.rect(x, y, w, h, color) end
 ---Draw a filled rectangle.
 ---@param rect Rect
 ---@param color Color
-function Draw.rect(rect, color) end
+function Draw.rect_obj(rect, color) end
 
 ---Draw a rectangle outline.
 ---@param x number
@@ -285,7 +285,7 @@ function Draw.rect_outline(x, y, w, h, color) end
 ---Draw a rectangle outline.
 ---@param rect Rect
 ---@param color Color
-function Draw.rect_outline(rect, color) end
+function Draw.rect_obj_outline(rect, color) end
 
 ---Draw a filled polygon.
 ---@param poly Polygon
@@ -316,7 +316,7 @@ function Draw.circle(center, radius, color, seg_count) end
 ---@param circ Circle
 ---@param color Color
 ---@param seg_count integer?
-function Draw.circle(circ, color, seg_count) end
+function Draw.circle_obj(circ, color, seg_count) end
 
 ---Draw a circle outline.
 ---@param x number
@@ -337,29 +337,42 @@ function Draw.circle_outline(center, radius, color, seg_count) end
 ---@param circ Circle
 ---@param color Color
 ---@param seg_count integer?
-function Draw.circle_outline(circ, color, seg_count) end
+function Draw.circle_obj_outline(circ, color, seg_count) end
 
 ---Draw a subtexture.
 ---@param sub SubTexture
 ---@param dst Quad
 ---@param color Color?
 ---@param mode ColorMode?
-function Draw.subtexture(sub, dst, color, mode) end
+---@param flip_x boolean?
+---@param flip_y boolean?
+function Draw.subtextured_quad(sub, dst, color, mode, flip_x, flip_y) end
 
 ---Draw a subtexture.
 ---@param sub SubTexture
 ---@param pos Vec2
 ---@param color Color?
 ---@param mode ColorMode?
-function Draw.subtexture_at(sub, pos, color, mode) end
+---@param flip_x boolean?
+---@param flip_y boolean?
+function Draw.subtexture_at(sub, pos, color, mode, flip_x, flip_y) end
 
 ---Draw text with the provided font and size.Methods
----@param font Font
 ---@param text string
----@param size number?
 ---@param pos Vec2
----@param color Color
-function Draw.text(font, text, size, pos, color) end
+---@param font Font
+---@param color Color?
+---@param size number?
+function Draw.text(text, pos, font, size, color) end
+
+---Draw text with the provided font and size.Methods
+---@param text string
+---@param x number
+---@param y number
+---@param font Font
+---@param color Color?
+---@param size number?
+function Draw.text(text, x, y, font, size, color) end
 
 ---Draw a custom set of vertices & indices.
 ---@param texture Texture?

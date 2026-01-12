@@ -3,6 +3,7 @@ use crate::prelude::SubTexture;
 use fey_font::Font as FeyFont;
 use fey_math::Vec2F;
 use fnv::FnvHashMap;
+use std::fmt::{Debug, Formatter};
 use std::path::Path;
 
 /// A drawable font.
@@ -11,6 +12,13 @@ pub struct Font {
     pixelated: bool,
     glyphs: FnvHashMap<char, Glyph>,
     kerning: FnvHashMap<(char, char), f32>,
+}
+
+impl Debug for Font {
+    #[inline]
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Font").finish_non_exhaustive()
+    }
 }
 
 /// A drawable font glyph.

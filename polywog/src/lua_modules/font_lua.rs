@@ -1,13 +1,10 @@
 use crate::core::Context;
 use crate::gfx::{Font, Glyph, SubTexture};
 use crate::lua::LuaModule;
-use crate::lua_modules::TextureRef;
+use crate::misc::BASIC_LATIN;
 use fey_lua::UserDataOf;
-use fey_math::{RectF, Vec2F};
 use mlua::prelude::{LuaError, LuaResult};
-use mlua::{
-    BorrowedStr, FromLua, Lua, UserData, UserDataMethods, UserDataRef, UserDataRefMut, Value,
-};
+use mlua::{BorrowedStr, Lua, UserData, UserDataMethods, UserDataRef, UserDataRefMut, Value};
 
 pub type FontData = UserDataOf<Font>;
 pub type FontRef = UserDataRef<Font>;
@@ -30,7 +27,10 @@ impl UserData for FontModule {
         });
         methods.add_function(
             "from_ttf_file",
-            |lua, (path, size, pixelated, chars): (BorrowedStr, f32, bool, BorrowedStr)| {
+            |lua, (path, size, pixelated, chars): (BorrowedStr, f32, bool, Option<BorrowedStr>)| {
+                let chars = chars
+                    .map(|chrs| chrs.to_string())
+                    .unwrap_or_else(|| BASIC_LATIN.chars().collect());
                 let ctx = Context::from_lua(lua);
                 Font::from_ttf_file(&ctx.graphics, path.as_ref(), size, pixelated, chars.chars())
                     .map_err(LuaError::external)?

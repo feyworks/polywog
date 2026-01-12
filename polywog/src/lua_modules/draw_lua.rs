@@ -1,10 +1,10 @@
 use crate::gfx::{BlendMode, ColorMode, Draw, Sampler};
-use crate::lua_modules::{ShaderRef, SurfaceRef, TextureRef};
+use crate::lua_modules::{FontRef, ShaderRef, SubTextureRef, SurfaceRef, TextureRef};
 use fey_color::{Rgba8, rgba};
 use fey_lua::LuaModule;
 use fey_math::{
-    Affine2F, LineF, Mat2F, Mat3F, Mat4F, Mat4Ref, Numeric, QuadF, RadiansF, RectF, RectU, Vec2F,
-    Vec3F, Vec4F, line, vec2,
+    Affine2F, CircleF, LineF, Mat2F, Mat3F, Mat4F, Mat4Ref, Numeric, PolygonRef, QuadF, RadiansF,
+    RectF, RectU, TriangleF, Vec2F, Vec3F, Vec4F, circle, line, vec2,
 };
 use mlua::prelude::{LuaError, LuaResult};
 use mlua::{BorrowedStr, Either, IntoLua, Lua, Number, Table, UserData, UserDataMethods, Value};
@@ -236,7 +236,7 @@ fn add_methods<T, M: UserDataMethods<T>>(methods: &mut M) {
                 (fx, fy) => {
                     let fx = fx.unwrap_or(false);
                     let fy = fy.unwrap_or(false);
-                    draw.textured_quad_flipped(tex, quad, col, mode, vec2(fx, fy));
+                    draw.textured_quad_flipped(tex, quad, col, mode, (fx, fy));
                 }
             }
             Ok(())
@@ -281,243 +281,258 @@ fn add_methods<T, M: UserDataMethods<T>>(methods: &mut M) {
         );
         Ok(())
     });
-    // methods.add_function(
-    //     "line",
-    //     |lua,
-    //      (a, b, c, d, e): (
-    //         Either<f32, Either<Vec2F, LineF>>, // x1    | from  | line
-    //         Either<Number, Vec2F>,             // y1    | to    | color
-    //         Option<Number>,                    // x2    | color
-    //         Option<Number>,                    // y2
-    //         Option<Rgba8>,                     // color
-    //     )| {
-    //         let (line, col) = match a {
-    //             Either::Left(a) => (
-    //                 line(
-    //                     vec2(a, b.left().unwrap().to_f32()),
-    //                     vec2(c.unwrap().to_f32(), d.unwrap().to_f32()),
-    //                 ),
-    //                 e.unwrap(),
-    //             ),
-    //             Either::Right(a) => match a {
-    //                 Either::Left(a) => (line(a, b.right().unwrap()), num_col_or_white(c)),
-    //                 Either::Right(a) => (a, num_col_or_white(b.left())),
-    //             },
-    //         };
-    //         Draw::from_lua(lua)?.line(line, col);
-    //         Ok(())
-    //     },
-    // );
-    methods.add_function("line", |lua, (line, col): (LineF, Option<Rgba8>)| {
-        // let (line, col) = match a {
-        //     Either::Left(a) => (
-        //         line(
-        //             vec2(a, b.left().unwrap().to_f32()),
-        //             vec2(c.unwrap().to_f32(), d.unwrap().to_f32()),
-        //         ),
-        //         e.unwrap(),
-        //     ),
-        //     Either::Right(a) => match a {
-        //         Either::Left(a) => (line(a, b.right().unwrap()), num_col_or_white(c)),
-        //         Either::Right(a) => (a, num_col_or_white(b.left())),
-        //     },
-        // };
+    methods.add_function(
+        "line",
+        |lua,
+         (a, b, c, d, e): (
+            Either<f32, Vec2F>, // x1 | from
+            Either<f32, Vec2F>, // y1 | to
+            Number,             // x2 | color
+            Option<f32>,        // y2
+            Option<Rgba8>,      // color
+        )| {
+            let (line, col) = match a {
+                Either::Left(a) => (
+                    line(vec2(a, b.unwrap_left()), vec2(c as f32, d.unwrap())),
+                    e.unwrap(),
+                ),
+                Either::Right(a) => (line(a, b.unwrap_right()), rgba(c as u32)),
+            };
+            Draw::from_lua(lua)?.line(line, col);
+            Ok(())
+        },
+    );
+    methods.add_function("line_obj", |lua, (line, col): (LineF, Option<Rgba8>)| {
         Draw::from_lua(lua)?.line(line, col.unwrap_or(Rgba8::WHITE));
         Ok(())
     });
+    methods.add_function(
+        "lines",
+        |lua, (points, col, loops): (Table, Rgba8, bool)| {
+            Draw::from_lua(lua)?.lines(
+                points.sequence_values::<Vec2F>().filter_map(|p| p.ok()),
+                col,
+                loops,
+            );
+            Ok(())
+        },
+    );
+    methods.add_function(
+        "triangle",
+        |lua, (a, b, c, col): (Vec2F, Vec2F, Vec2F, Rgba8)| {
+            Draw::from_lua(lua)?.triangle((a, b, c), col);
+            Ok(())
+        },
+    );
+    methods.add_function("triangle_obj", |lua, (tri, col): (TriangleF, Rgba8)| {
+        Draw::from_lua(lua)?.triangle(tri, col);
+        Ok(())
+    });
+    methods.add_function(
+        "triangle_outline",
+        |lua, (a, b, c, col): (Vec2F, Vec2F, Vec2F, Rgba8)| {
+            Draw::from_lua(lua)?.triangle_outline((a, b, c), col);
+            Ok(())
+        },
+    );
+    methods.add_function(
+        "triangle_obj_outline",
+        |lua, (tri, col): (TriangleF, Rgba8)| {
+            Draw::from_lua(lua)?.triangle_outline(tri, col);
+            Ok(())
+        },
+    );
+    methods.add_function(
+        "quad",
+        |lua, (a, b, c, d, col): (Vec2F, Vec2F, Vec2F, Vec2F, Rgba8)| {
+            Draw::from_lua(lua)?.quad((a, b, c, d), col);
+            Ok(())
+        },
+    );
+    methods.add_function("quad_obj", |lua, (quad, col): (QuadF, Rgba8)| {
+        Draw::from_lua(lua)?.quad(quad, col);
+        Ok(())
+    });
+    methods.add_function(
+        "quad_outline",
+        |lua, (a, b, c, d, col): (Vec2F, Vec2F, Vec2F, Vec2F, Rgba8)| {
+            Draw::from_lua(lua)?.quad_outline((a, b, c, d), col);
+            Ok(())
+        },
+    );
+    methods.add_function("quad_obj_outline", |lua, (quad, col): (QuadF, Rgba8)| {
+        Draw::from_lua(lua)?.quad_outline(quad, col);
+        Ok(())
+    });
+    methods.add_function(
+        "rect",
+        |lua, (x, y, w, h, col): (f32, f32, f32, f32, Rgba8)| {
+            Draw::from_lua(lua)?.rect((x, y, w, h), col);
+            Ok(())
+        },
+    );
+    methods.add_function("rect_obj", |lua, (rect, col): (RectF, Rgba8)| {
+        Draw::from_lua(lua)?.rect(rect, col);
+        Ok(())
+    });
+    methods.add_function(
+        "rect_outline",
+        |lua, (x, y, w, h, col): (f32, f32, f32, f32, Rgba8)| {
+            Draw::from_lua(lua)?.rect_outline((x, y, w, h), col);
+            Ok(())
+        },
+    );
+    methods.add_function("rect_obj_outline", |lua, (rect, col): (RectF, Rgba8)| {
+        Draw::from_lua(lua)?.rect_outline(rect, col);
+        Ok(())
+    });
+    methods.add_function("polygon", |lua, (poly, col): (PolygonRef, Rgba8)| {
+        Draw::from_lua(lua)?.polygon(&poly, col);
+        Ok(())
+    });
+    methods.add_function(
+        "polygon_outline",
+        |lua, (poly, col): (PolygonRef, Rgba8)| {
+            Draw::from_lua(lua)?.polygon_outline(&poly, col);
+            Ok(())
+        },
+    );
+    methods.add_function(
+        "circle",
+        |lua,
+         (
+            a, // x      | center
+            b, // y      | radius
+            c, // radius | color
+            d, // color  | segs
+            e, // segs
+        ): (Either<f32, Vec2F>, f32, Number, Option<Number>, Option<u32>)| {
+            let (circ, col, segs) = match a {
+                Either::Left(a) => (circle(vec2(a, b), c as f32), rgba(d.unwrap() as u32), e),
+                Either::Right(a) => (circle(a, b), rgba(c as u32), d.map(|d| d as u32)),
+            };
+            Draw::from_lua(lua)?.circle(circ, col, segs);
+            Ok(())
+        },
+    );
+    methods.add_function(
+        "circle_obj",
+        |lua, (circ, col, segs): (CircleF, Rgba8, Option<u32>)| {
+            Draw::from_lua(lua)?.circle(circ, col, segs);
+            Ok(())
+        },
+    );
+    methods.add_function(
+        "circle_outline",
+        |lua,
+         (
+            a, // x      | center
+            b, // y      | radius
+            c, // radius | color
+            d, // color  | segs
+            e, // segs
+        ): (Either<f32, Vec2F>, f32, Number, Option<Number>, Option<u32>)| {
+            let (circ, col, segs) = match a {
+                Either::Left(a) => (circle(vec2(a, b), c as f32), rgba(d.unwrap() as u32), e),
+                Either::Right(a) => (circle(a, b), rgba(c as u32), d.map(|d| d as u32)),
+            };
+            Draw::from_lua(lua)?.circle_outline(circ, col, segs);
+            Ok(())
+        },
+    );
+    methods.add_function(
+        "circle_obj_outline",
+        |lua, (circ, col, segs): (CircleF, Rgba8, Option<u32>)| {
+            Draw::from_lua(lua)?.circle_outline(circ, col, segs);
+            Ok(())
+        },
+    );
+    methods.add_function(
+        "subtextured_quad",
+        |lua,
+         (sub, quad, col, mode, fx, fy): (
+            SubTextureRef,
+            QuadF,
+            Option<Rgba8>,
+            Option<ColorMode>,
+            Option<bool>,
+            Option<bool>,
+        )| {
+            let col = col.unwrap_or(Rgba8::WHITE);
+            let mode = mode.unwrap_or(ColorMode::MULT);
+            let draw = Draw::from_lua(lua)?;
+            match (fx, fy) {
+                (None, None) => {
+                    draw.subtextured_quad_ext(sub.deref(), quad, col, mode);
+                }
+                (fx, fy) => {
+                    let fx = fx.unwrap_or(false);
+                    let fy = fy.unwrap_or(false);
+                    draw.subtextured_quad_flipped(sub.deref(), quad, col, mode, (fx, fy));
+                }
+            }
+            Ok(())
+        },
+    );
+    methods.add_function(
+        "subtexture_at",
+        |lua,
+         (sub, pos, col, mode, fx, fy): (
+            SubTextureRef,
+            Vec2F,
+            Option<Rgba8>,
+            Option<ColorMode>,
+            Option<bool>,
+            Option<bool>,
+        )| {
+            let col = col.unwrap_or(Rgba8::WHITE);
+            let mode = mode.unwrap_or(ColorMode::MULT);
+            let draw = Draw::from_lua(lua)?;
+            match (fx, fy) {
+                (None, None) => {
+                    draw.subtexture_at_ext(sub.deref(), pos, col, mode);
+                }
+                (fx, fy) => {
+                    let fx = fx.unwrap_or(false);
+                    let fy = fy.unwrap_or(false);
+                    draw.subtexture_at_flipped(sub.deref(), pos, col, mode, (fx, fy));
+                }
+            }
+            Ok(())
+        },
+    );
+    methods.add_function(
+        "text",
+        |lua,
+         (txt, a, b, c, d, e): (
+            BorrowedStr,                    // text
+            Either<f32, Vec2F>,             // x     | pos
+            Either<f32, FontRef>,           // y     | font
+            Either<FontRef, Option<Rgba8>>, // font  | color
+            Option<Number>,                 // color | size
+            Option<f32>,                    // size
+        )| {
+            let (pos, font, col, size) = match a {
+                Either::Left(a) => (vec2(a, b.unwrap_left()), c.unwrap_left(), num_col(d), e),
+                Either::Right(a) => (a, b.unwrap_right(), c.unwrap_right(), d.map(|d| d as f32)),
+            };
+            let col = col.unwrap_or(Rgba8::WHITE);
+            Draw::from_lua(lua)?.text(txt.as_ref(), pos, font.deref(), col, size);
+            Ok(())
+        },
+    );
 
-    //
-    // ---Draw lines connecting the series of points into a chain, optionally looping to the start.
-    // ---@param self Draw
-    // ---@param points Vec2[]
-    // ---@param color Color
-    // ---@param loops boolean
-    // function methods.lines(self, points, color, loops) end
-    //
-    // ---Draw a filled triangle.
-    // ---@param self Draw
-    // ---@param a Vec2
-    // ---@param b Vec2
-    // ---@param c Vec2
-    // ---@param color Color
-    // function methods.triangle(self, a, b, c, color) end
-    //
-    // ---Draw a filled triangle.
-    // ---@param self Draw
-    // ---@param tri Triangle
-    // ---@param color Color
-    // function methods.triangle(self, tri, color) end
-    //
-    // ---Draw a triangle outline.
-    // ---@param self Draw
-    // ---@param a Vec2
-    // ---@param b Vec2
-    // ---@param c Vec2
-    // ---@param color Color
-    // function methods.triangle_outline(self, a, b, c, color) end
-    //
-    // ---Draw a triangle outline.
-    // ---@param self Draw
-    // ---@param tri Triangle
-    // ---@param color Color
-    // function methods.triangle_outline(self, tri, color) end
-    //
-    // ---Draw a filled quad.
-    // ---@param self Draw
-    // ---@param a Vec2
-    // ---@param b Vec2
-    // ---@param c Vec2
-    // ---@param d Vec2
-    // ---@param color Color
-    // function methods.quad(self, a, b, c, d, color) end
-    //
-    // ---Draw a filled quad.
-    // ---@param self Draw
-    // ---@param quad Quad
-    // ---@param color Color
-    // function methods.quad(self, quad, color) end
-    //
-    // ---Draw a quad outline.
-    // ---@param self Draw
-    // ---@param a Vec2
-    // ---@param b Vec2
-    // ---@param c Vec2
-    // ---@param d Vec2
-    // ---@param color Color
-    // function methods.quad_outline(self, a, b, c, d, color) end
-    //
-    // ---Draw a quad outline.
-    // ---@param self Draw
-    // ---@param quad Quad
-    // ---@param color Color
-    // function methods.quad_outline(self, quad, color) end
-    //
-    // ---Draw a filled rectangle.
-    // ---@param self Draw
-    // ---@param x number
-    // ---@param y number
-    // ---@param w number
-    // ---@param h number
-    // ---@param color Color
-    // function methods.rect(self, x, y, w, h, color) end
-    //
-    // ---Draw a filled rectangle.
-    // ---@param self Draw
-    // ---@param rect Rect
-    // ---@param color Color
-    // function methods.rect(self, rect, color) end
-    //
-    // ---Draw a rectangle outline.
-    // ---@param self Draw
-    // ---@param x number
-    // ---@param y number
-    // ---@param w number
-    // ---@param h number
-    // ---@param color Color
-    // function methods.rect_outline(self, x, y, w, h, color) end
-    //
-    // ---Draw a rectangle outline.
-    // ---@param self Draw
-    // ---@param rect Rect
-    // ---@param color Color
-    // function methods.rect_outline(self, rect, color) end
-    //
-    // ---Draw a filled polygon.
-    // ---@param self Draw
-    // ---@param poly Polygon
-    // ---@param color Color
-    // function methods.polygon(self, poly, color) end
-    //
-    // ---Draw a polygon outline.
-    // ---@param self Draw
-    // ---@param poly Polygon
-    // ---@param color Color
-    // function methods.polygon_outline(self, poly, color) end
-    //
-    // ---Draw a filled circle.
-    // ---@param self Draw
-    // ---@param x number
-    // ---@param y number
-    // ---@param radius number
-    // ---@param color Color
-    // ---@param seg_count integer?
-    // function methods.circle(self, x, y, radius, color, seg_count) end
-    //
-    // ---Draw a filled circle.
-    // ---@param self Draw
-    // ---@param center Vec2
-    // ---@param radius number
-    // ---@param color Color
-    // ---@param seg_count integer?
-    // function methods.circle(self, center, radius, color, seg_count) end
-    //
-    // ---Draw a filled circle.
-    // ---@param self Draw
-    // ---@param circ Circle
-    // ---@param color Color
-    // ---@param seg_count integer?
-    // function methods.circle(self, circ, color, seg_count) end
-    //
-    // ---Draw a circle outline.
-    // ---@param self Draw
-    // ---@param x number
-    // ---@param y number
-    // ---@param radius number
-    // ---@param color Color
-    // ---@param seg_count integer?
-    // function methods.circle_outline(self, x, y, radius, color, seg_count) end
-    //
-    // ---Draw a circle outline.
-    // ---@param self Draw
-    // ---@param center Vec2
-    // ---@param radius number
-    // ---@param color Color
-    // ---@param seg_count integer?
-    // function methods.circle_outline(self, center, radius, color, seg_count) end
-    //
-    // ---Draw a circle outline.
-    // ---@param self Draw
-    // ---@param circ Circle
-    // ---@param color Color
-    // ---@param seg_count integer?
-    // function methods.circle_outline(self, circ, color, seg_count) end
-    //
-    // ---Draw a subtexture.
-    // ---@param sub SubTexture
-    // ---@param dst Quad
-    // ---@param color Color?
-    // ---@param mode ColorMode?
-    // function methods.subtexture(sub, dst, color, mode) end
-    //
-    // ---Draw a subtexture.
-    // ---@param sub SubTexture
-    // ---@param pos Vec2
-    // ---@param color Color?
-    // ---@param mode ColorMode?
-    // function methods.subtexture_at(sub, pos, color, mode) end
-    //
-    // ---Draw text with the provided font and size.
-    // ---@param self DrawMethods
-    // ---@param font Font
-    // ---@param text string
-    // ---@param size number?
-    // ---@param pos Vec2
-    // ---@param color Color
-    // function methods.text(self, font, text, size, pos, color) end
-    //
     // ---Draw a custom set of vertices & indices.
-    // ---@param self Draw
     // ---@param texture Texture?
     // ---@param topology Topology
     // ---@param vertices Vertex[]
     // ---@param indices integer[]
-    // function methods.custom(self, texture, topology, vertices, indices) end
+    // function Draw.custom(texture, topology, vertices, indices) end
     //
     // ---Draw the provided vertex & index buffers.
-    // ---@param self Draw
     // ---@param texture Texture?
     // ---@param topology Topology
     // ---@param vertices VertexBuffer
     // ---@param indices IndexBuffer
-    // function methods.buffers(self, texture, topology, vertices, indices) end
+    // function Draw.buffers(texture, topology, vertices, indices) end
 }

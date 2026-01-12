@@ -553,7 +553,6 @@ impl Draw {
     ) {
         let (verts, inds, mat) = self.tex_mode(texture.as_ref());
         let [a, b, c, d] = quad.into().0.map(|p| mat.transform_pos2(p));
-        let i = verts.len() as u32;
         let [mut aa, mut bb, mut cc, mut dd] = RectF::sized(Vec2F::ONE).corners();
         let flip = flip.into();
         if flip.x {
@@ -564,6 +563,7 @@ impl Draw {
             swap(&mut aa.y, &mut dd.y);
             swap(&mut bb.y, &mut cc.y);
         }
+        let i = verts.len() as u32;
         verts.extend_from_slice(&[
             Vertex::new(a, aa, color, mode),
             Vertex::new(b, bb, color, mode),
@@ -848,7 +848,40 @@ impl Draw {
 
     /// Draw a subtexture.
     #[inline]
-    pub fn subtexture_ext(
+    pub fn subtextured_quad_flipped(
+        &mut self,
+        sub: impl AsRef<SubTexture>,
+        dst: impl Into<QuadF>,
+        color: Rgba8,
+        mode: ColorMode,
+        flip: impl Into<Vec2<bool>>,
+    ) {
+        let sub = sub.as_ref();
+        let (verts, inds, mat) = self.tex_mode(&sub.texture);
+        let [a, b, c, d] = dst.into().0.map(|p| mat.transform_pos2(p));
+        let [mut aa, mut bb, mut cc, mut dd] = sub.coords;
+        let flip = flip.into();
+        if flip.x {
+            swap(&mut aa.x, &mut bb.x);
+            swap(&mut cc.x, &mut dd.x);
+        }
+        if flip.y {
+            swap(&mut aa.y, &mut dd.y);
+            swap(&mut bb.y, &mut cc.y);
+        }
+        let i = verts.len() as u32;
+        verts.extend_from_slice(&[
+            Vertex::new(a, aa, color, mode),
+            Vertex::new(b, bb, color, mode),
+            Vertex::new(c, cc, color, mode),
+            Vertex::new(d, dd, color, mode),
+        ]);
+        inds.extend_from_slice(&[i, i + 1, i + 2, i, i + 2, i + 3]);
+    }
+
+    /// Draw a subtexture.
+    #[inline]
+    pub fn subtextured_quad_ext(
         &mut self,
         sub: impl AsRef<SubTexture>,
         dst: impl Into<QuadF>,
@@ -868,8 +901,22 @@ impl Draw {
 
     /// Draw a subtexture.
     #[inline]
-    pub fn subtexture(&mut self, sub: impl AsRef<SubTexture>, dst: impl Into<QuadF>) {
-        self.subtexture_ext(sub, dst, Rgba8::WHITE, ColorMode::MULT);
+    pub fn subtextured_quad(&mut self, sub: impl AsRef<SubTexture>, dst: impl Into<QuadF>) {
+        self.subtextured_quad_ext(sub, dst, Rgba8::WHITE, ColorMode::MULT);
+    }
+
+    /// Draw a subtexture at the provided position.
+    #[inline]
+    pub fn subtexture_at_flipped(
+        &mut self,
+        sub: impl AsRef<SubTexture>,
+        pos: impl Into<Vec2F>,
+        color: Rgba8,
+        mode: ColorMode,
+        flip: impl Into<Vec2<bool>>,
+    ) {
+        let dst = RectF::pos_size(pos.into(), sub.as_ref().rect.size());
+        self.subtextured_quad_flipped(sub, dst, color, mode, flip);
     }
 
     /// Draw a subtexture at the provided position.
@@ -882,7 +929,7 @@ impl Draw {
         mode: ColorMode,
     ) {
         let dst = RectF::pos_size(pos.into(), sub.as_ref().rect.size());
-        self.subtexture_ext(sub, dst, color, mode);
+        self.subtextured_quad_ext(sub, dst, color, mode);
     }
 
     /// Draw a subtexture at the provided position.
@@ -893,7 +940,15 @@ impl Draw {
 
     /// Draw text with the provided font and size.
     #[inline]
-    pub fn text_ext(&mut self, font: &Font, text: &str, size: f32, pos: Vec2F, color: Rgba8) {
+    pub fn text(
+        &mut self,
+        text: &str,
+        pos: Vec2F,
+        font: &Font,
+        color: Rgba8,
+        size: impl Into<Option<f32>>,
+    ) {
+        let size = size.into().unwrap_or(font.size());
         let prev_sampler = self.main_sampler();
         let mag_filter = match font.pixelated() {
             true => FilterMode::Nearest,
