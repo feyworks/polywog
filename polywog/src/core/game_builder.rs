@@ -37,6 +37,7 @@ impl GameBuilder {
                 .with_module::<fey_lua::InstantModule>()?
                 .with_modules::<fey_math::MathModules>()?
                 .with_module::<fey_rand::RandModule>()?
+                .with_module::<AppModule>()?
                 .with_module::<ColorModeModule>()?
                 .with_module::<DrawModule>()?
                 .with_module::<FontModule>()?

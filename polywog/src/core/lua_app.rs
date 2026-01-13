@@ -30,6 +30,24 @@ impl LuaApp {
             "lua entry point not found at: {main_path:?}"
         );
 
+        // get a list of all the default globals
+        let default_globals = lua
+            .globals()
+            .pairs::<String, Value>()
+            .map(|p| p.unwrap().0)
+            .collect();
+
+        // get a list of all the default modules
+        let default_modules = lua
+            .globals()
+            .get::<Table>("package")
+            .unwrap()
+            .get::<Table>("loaded")
+            .unwrap()
+            .pairs::<String, Value>()
+            .map(|p| p.unwrap().0)
+            .collect();
+
         // preload all scripts in the root lua folder
         fn read_dir(lua: &Lua, dir: PathBuf, prefix: String) -> Result<(), GameError> {
             for entry in std::fs::read_dir(&dir)?.flatten() {
@@ -59,24 +77,6 @@ impl LuaApp {
         }
         read_dir(&lua, "lua".into(), String::new()).unwrap();
 
-        // get a list of all the "default" globals
-        let default_globals = lua
-            .globals()
-            .pairs::<String, Value>()
-            .map(|p| p.unwrap().0)
-            .collect();
-
-        // get a list of all the "default" modules
-        let default_modules = lua
-            .globals()
-            .get::<Table>("package")
-            .unwrap()
-            .get::<Table>("loaded")
-            .unwrap()
-            .pairs::<String, Value>()
-            .map(|p| p.unwrap().0)
-            .collect();
-
         // load up the entry point
         let main = LuaMain::load(&lua, &default_globals, &default_modules);
         let call_lua_init = if let Err(err) = &main {
@@ -95,11 +95,26 @@ impl LuaApp {
         }
     }
 
-    pub fn update(&mut self, _ctx: &Context) {
+    pub fn reload(&mut self) {
+        self.main = LuaMain::load(&self.lua, &self.default_globals, &self.default_modules);
+        self.call_lua_init = if let Err(err) = &self.main {
+            println!("{err}");
+            false
+        } else {
+            true
+        };
+    }
+
+    pub fn update(&mut self, ctx: &Context) {
+        // reload the lua if requested
+        if ctx.reload_lua.take() {
+            self.reload();
+        }
+
+        // call Main:init() when requested
         if self.call_lua_init {
             self.call_lua_init = false;
 
-            // call Main:init()
             if let Ok(Err(err)) = self.main.as_ref().map(|main| main.init()) {
                 println!("{err}");
                 self.main = Err(err);

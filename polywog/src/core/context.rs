@@ -24,6 +24,9 @@ pub struct ContextData {
     #[cfg(feature = "lua")]
     pub lua: mlua::WeakLua,
 
+    #[cfg(feature = "lua")]
+    pub reload_lua: Cell<bool>,
+
     pub(crate) quit_requested: Cell<bool>,
 }
 
@@ -62,5 +65,15 @@ impl Context {
     #[inline]
     pub fn quit_requested(&self) -> bool {
         self.quit_requested.get()
+    }
+
+    #[cfg(feature = "lua")]
+    pub fn reload_lua(&self) {
+        self.reload_lua.set(true);
+    }
+
+    #[cfg(feature = "lua")]
+    pub fn reload_lua_requested(&self) -> bool {
+        self.reload_lua.get()
     }
 }

@@ -86,6 +86,9 @@ impl<G: Game> ApplicationHandler for AppHandler<G> {
             #[cfg(feature = "lua")]
             lua: opts.lua.weak(),
 
+            #[cfg(feature = "lua")]
+            reload_lua: Cell::new(false),
+
             quit_requested: Cell::new(false),
         }));
 

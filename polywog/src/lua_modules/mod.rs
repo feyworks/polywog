@@ -1,3 +1,4 @@
+mod app_lua;
 mod blend_mode_lua;
 mod color_mode_lua;
 mod draw_lua;
@@ -23,6 +24,7 @@ mod vertex_lua;
 mod video_mode_lua;
 mod window_lua;
 
+pub use app_lua::*;
 pub use color_mode_lua::*;
 pub use draw_lua::*;
 pub use font_lua::*;
