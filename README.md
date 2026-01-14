@@ -108,6 +108,11 @@ something very ambitious.
 
 ## 💡 Getting started
 
+There is no official tutorialization at the moment, though we will eventually have a walkthrough.
+For now, check out the
+[minimal example](https://github.com/feyworks/polywog/tree/main/examples/minimal) and others to see
+how it looks and how to get started.
+
 ## 💃 Join the community
 
 Join our [Discord](https://discord.gg/MfYsGDwa4A) to chat, get help, report bugs, and share what you're working on!
