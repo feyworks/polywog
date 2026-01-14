@@ -4,8 +4,7 @@ version = "0.1.0"
 edition = "2024"
 authors.workspace = true
 license.workspace = true
-description.workspace = true
-readme.workspace = true
+description = "Image encoding, decoding, and manipulation."
 
 [features]
 lua = ["dep:mlua", "dep:fey_lua", "fey_math/lua", "fey_color/lua"]

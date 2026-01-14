@@ -4,8 +4,7 @@ version = "0.1.0"
 edition = "2024"
 authors.workspace = true
 license.workspace = true
-description.workspace = true
-readme.workspace = true
+description = "2D grid data structure and related traits."
 
 [dependencies]
 fey_math = { version = "0.1.0", path = "../fey_math" }

@@ -4,8 +4,7 @@ version = "0.1.0"
 edition = "2024"
 authors.workspace = true
 license.workspace = true
-description.workspace = true
-readme.workspace = true
+description = "Random number generation."
 
 [features]
 lua = ["dep:mlua", "dep:fey_lua", "dep:fey_guid", "fey_guid/lua"]

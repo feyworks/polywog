@@ -4,8 +4,7 @@ version = "0.1.0"
 edition = "2024"
 authors.workspace = true
 license.workspace = true
-description.workspace = true
-readme.workspace = true
+description = "Font loading and glyph rasterization."
 
 [dependencies]
 ab_glyph = "0.2.32"

@@ -1,3 +1,5 @@
+//! Temp types and helpers for Lua integration.
+
 mod create_fill;
 mod handle;
 mod handle_ref;

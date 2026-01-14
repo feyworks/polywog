@@ -4,8 +4,7 @@ version = "0.1.0"
 edition = "2024"
 authors.workspace = true
 license.workspace = true
-description.workspace = true
-readme.workspace = true
+description = "Texture packer example."
 
 [dependencies]
 polywog = { version = "0.1.0", path = "../../polywog" }
