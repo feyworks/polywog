@@ -29,7 +29,8 @@ own game engines. It provides:
 - 📐 geometry types for various shapes, overlap testing, extraction, raycasting, etc.
 - 🎨 tools for working with colors, image encoding, decoding, and manipulation
 - 🧳 texture packing and other techniques for rendering optimization
-- 🦀 and of course, full access to Rust's speed, power, ecosystem, and pleasure of use
+- 🦀 full access to Rust's speed, power, ecosystem, and pleasure of use
+- 🌙 full Lua bindings if desired, with LuaLS type annotations
 
 ### 🧱 Just the basics
 
