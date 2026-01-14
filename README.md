@@ -1,21 +1,20 @@
-- [🐸 Polywog](#-polywog)
-  - [⚠️ Alpha Testing](#️-alpha-testing)
-  - [✅ Features](#-features)
-    - [🧱 Just the basics](#-just-the-basics)
-    - [🌐 Cross platform](#-cross-platform)
-    - [👩‍🎓 Create while you learn](#-create-while-you-learn)
-  - [🤔 Is this for me?](#-is-this-for-me)
-    - [👍 Polywog may be for you if you...](#-polywog-may-be-for-you-if-you)
-    - [👎 Polywog is not for you if you...](#-polywog-is-not-for-you-if-you)
-    - [🔍 Want an alternative?](#-want-an-alternative)
-  - [💡 Getting started](#-getting-started)
-  - [💃 Join the community](#-join-the-community)
-
-# 🐸 Polywog
+![Polywog](assets/banner.png)
 
 Polywog is across-platform framework for creating 2D games in the [Rust](https://rust-lang.org/)
 programming language. It contains everything you need to start making a game with no hassle, and
 then gets out of your way. The rest is up to you!
+
+- [⚠️ Alpha Testing](#️-alpha-testing)
+- [✅ Features](#-features)
+  - [🧱 Just the basics](#-just-the-basics)
+  - [🌐 Cross platform](#-cross-platform)
+  - [👩‍🎓 Create while you learn](#-create-while-you-learn)
+- [🤔 Is this for me?](#-is-this-for-me)
+  - [👍 Polywog may be for you if you...](#-polywog-may-be-for-you-if-you)
+  - [👎 Polywog is not for you if you...](#-polywog-is-not-for-you-if-you)
+  - [🔍 Want an alternative?](#-want-an-alternative)
+- [💡 Getting started](#-getting-started)
+- [💃 Join the community](#-join-the-community)
 
 ## ⚠️ Alpha Testing
 
