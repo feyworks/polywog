@@ -7,22 +7,11 @@
       <sourceFolder url="file://$MODULE_DIR$/crates/fey_math/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/crates/fey_packer/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/crates/fey_rand/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/examples/controller/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/examples/minimal/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/examples/platformer/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/examples/screen/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/examples/shaders/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/examples/smooth_moves/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/examples/surfaces/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/examples/texture_packer/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/examples/tiles/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/polywog/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/crates/fey_grid/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/crates/fey_img/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/crates/fey_font/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/examples/text/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/crates/fey_lua/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/examples/minimal_lua/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/polywog-cli/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/crates/kero_color/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/crates/kero_font/src" isTestSource="false" />
@@ -36,6 +25,18 @@
       <sourceFolder url="file://$MODULE_DIR$/kero-cli/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/kero/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/crates/kero-cli/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/kero/examples" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/kero/examples/controller/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/kero/examples/minimal/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/kero/examples/minimal_lua/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/kero/examples/platformer/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/kero/examples/screen/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/kero/examples/shaders/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/kero/examples/smooth_moves/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/kero/examples/surfaces/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/kero/examples/text/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/kero/examples/texture_packer/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/kero/examples/tiles/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/crates/kero/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>

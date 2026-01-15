@@ -9,7 +9,9 @@ use std::ops::Deref;
 use std::path::Path;
 use std::rc::Rc;
 
-/// Context with the core systems.
+/// Handle to the game's core systems.
+///
+/// This handle can be cloned and passed around freely to give objects access to the context.
 #[derive(Clone)]
 pub struct Context(pub(crate) Rc<ContextData>);
 

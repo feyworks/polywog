@@ -1,11 +1,11 @@
 [package]
-name = "surfaces"
+name = "platformer"
 version = "0.1.0"
 edition = "2024"
 authors.workspace = true
 license.workspace = true
-description = "Surfaces example."
+description = "Platformer example."
 
 [dependencies]
 env_logger = "0.11.8"
-kero = { version = "0.1.0", path = "../../crates/kero" }
+kero = { version = "0.1.0", path = "../.." }

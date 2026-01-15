@@ -1,11 +1,11 @@
 [package]
-name = "tiles"
+name = "text"
 version = "0.1.0"
 edition = "2024"
 authors.workspace = true
 license.workspace = true
-description = "Tiles example."
+description = "Text example."
 
 [dependencies]
+kero = { version = "0.1.0", path = "../.." }
 env_logger = "0.11.8"
-kero = { version = "0.1.0", path = "../../crates/kero" }

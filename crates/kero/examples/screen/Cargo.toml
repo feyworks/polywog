@@ -1,11 +1,11 @@
 [package]
-name = "smooth_moves"
+name = "screen"
 version = "0.1.0"
 edition = "2024"
 authors.workspace = true
 license.workspace = true
-description = "Smooth movement example."
+description = "Screen example."
 
 [dependencies]
 env_logger = "0.11.8"
-kero = { version = "0.1.0", path = "../../crates/kero" }
+kero = { version = "0.1.0", path = "../.." }
