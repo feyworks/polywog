@@ -10,8 +10,8 @@ const UPSCALE: u32 = 4; // should be dynamic...
 const TILE_SIZE: Vec2U = vec2(8, 8);
 
 fn main() -> Result<(), GameError> {
-    env_logger::init();
     kero::new_game()
+        .with_default_logger()
         .with_title("Platformer")
         .with_size(NATIVE_RES.x * UPSCALE, NATIVE_RES.y * UPSCALE)
         .run::<SubTexturesExample>(())

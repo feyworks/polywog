@@ -70,6 +70,14 @@ impl GameBuilder {
         Ok(this)
     }
 
+    /// Run the game with a default [log](https://crates.io/crates/log) implementation initialized.
+    /// If you want to bring your own logger, you can omit this call and initialize it before
+    /// calling `run_game()`.
+    pub fn with_default_logger(self) -> Self {
+        env_logger::init();
+        self
+    }
+
     /// Set the title of the game window.
     pub fn with_title(self, title: &str) -> Self {
         Self {

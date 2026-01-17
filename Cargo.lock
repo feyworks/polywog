@@ -422,7 +422,6 @@ dependencies = [
 name = "controller"
 version = "0.1.0"
 dependencies = [
- "env_logger",
  "kero",
 ]
 
@@ -1083,6 +1082,7 @@ dependencies = [
  "compact_str",
  "directories",
  "dpi",
+ "env_logger",
  "fey_color",
  "fey_font",
  "fey_grid",
@@ -1259,7 +1259,6 @@ dependencies = [
 name = "minimal"
 version = "0.1.0"
 dependencies = [
- "env_logger",
  "kero",
 ]
 
@@ -1267,7 +1266,6 @@ dependencies = [
 name = "minimal_lua"
 version = "0.1.0"
 dependencies = [
- "env_logger",
  "kero",
 ]
 
@@ -1738,7 +1736,6 @@ checksum = "7edddbd0b52d732b21ad9a5fab5c704c14cd949e5e9a1ec5929a24fded1b904c"
 name = "platformer"
 version = "0.1.0"
 dependencies = [
- "env_logger",
  "kero",
 ]
 
@@ -2051,7 +2048,6 @@ checksum = "94143f37725109f92c262ed2cf5e59bce7498c01bcc1502d7b9afe439a4e9f49"
 name = "screen"
 version = "0.1.0"
 dependencies = [
- "env_logger",
  "kero",
 ]
 
@@ -2102,7 +2098,6 @@ dependencies = [
 name = "shaders"
 version = "0.1.0"
 dependencies = [
- "env_logger",
  "kero",
 ]
 
@@ -2168,7 +2163,6 @@ dependencies = [
 name = "smooth_moves"
 version = "0.1.0"
 dependencies = [
- "env_logger",
  "kero",
 ]
 
@@ -2224,7 +2218,6 @@ dependencies = [
 name = "surfaces"
 version = "0.1.0"
 dependencies = [
- "env_logger",
  "kero",
 ]
 
@@ -2243,7 +2236,6 @@ dependencies = [
 name = "text"
 version = "0.1.0"
 dependencies = [
- "env_logger",
  "kero",
 ]
 
@@ -2251,7 +2243,6 @@ dependencies = [
 name = "texture_packer"
 version = "0.1.0"
 dependencies = [
- "env_logger",
  "kero",
 ]
 
@@ -2299,7 +2290,6 @@ dependencies = [
 name = "tiles"
 version = "0.1.0"
 dependencies = [
- "env_logger",
  "kero",
 ]
 

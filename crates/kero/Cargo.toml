@@ -12,6 +12,8 @@ keywords = []
 categories = []
 
 [features]
+default = ["env_logger"]
+env_logger = []
 lua = [
     "dep:mlua",
     "dep:fey_lua",
@@ -28,6 +30,7 @@ bytemuck = "1.24.0"
 compact_str = "0.9.0"
 directories = "6.0.0"
 dpi = "0.1.2"
+env_logger = "0.11.8"
 fey_color = { version = "0.1.0", path = "../fey_color" }
 fey_font = { version = "0.1.0", path = "../fey_font" }
 fey_grid = { version = "0.1.0", path = "../fey_grid" }

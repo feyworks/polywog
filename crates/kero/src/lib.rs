@@ -41,10 +41,9 @@
 //! use kero::prelude::*;
 //! 
 //! fn main() -> Result<(), GameError> {
-//!     env_logger::init();
-//! 
 //!     // create a game, set some options, and then run it
 //!     kero::new_game()
+//!         .with_default_logger()
 //!         .with_title("My Game")
 //!         .with_size(1280, 720)
 //!         .run::<MyGame>(())

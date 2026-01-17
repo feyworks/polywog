@@ -8,4 +8,3 @@ description = "Texture packer example."
 
 [dependencies]
 kero = { version = "0.1.0", path = "../.." }
-env_logger = "0.11.8"

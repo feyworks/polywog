@@ -1,8 +1,8 @@
 use kero::prelude::*;
 
 fn main() -> Result<(), GameError> {
-    env_logger::init();
     kero::new_game()
+        .with_default_logger()
         .with_title("Screen")
         .with_size(1280, 720)
         .run::<ScreenExample>(())

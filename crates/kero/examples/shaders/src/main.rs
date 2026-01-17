@@ -1,8 +1,8 @@
 use kero::prelude::*;
 
 fn main() -> Result<(), GameError> {
-    env_logger::init();
     kero::new_game()
+        .with_default_logger()
         .with_title("Shaders")
         .with_size(960, 640)
         .run::<ShadersExample>(())
