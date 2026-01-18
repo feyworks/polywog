@@ -144,14 +144,28 @@ impl DynImage {
                 ColorType::Rgb => ImageRgb8::from_raw(size, buf).into(),
                 ColorType::Rgba => ImageRgba8::from_raw(size, buf).into(),
                 ColorType::Indexed => {
-                    let pal = reader.info().palette.as_ref().unwrap().as_ref();
-                    let buf = buf
-                        .into_iter()
-                        .map(|i| i as usize)
-                        .map(|i| [pal[i * 3], pal[i * 3 + 1], pal[i * 3 + 2]])
-                        .flatten()
-                        .collect();
-                    ImageRgb8::from_raw(size, buf).into()
+                    let info = reader.info();
+                    let pal = info.palette.as_ref().unwrap().as_ref();
+                    match info.trns.as_ref() {
+                        Some(trns) => ImageRgba8::from_raw(
+                            size,
+                            buf.into_iter()
+                                .map(|i| i as usize)
+                                .map(|i| [pal[i * 3], pal[i * 3 + 1], pal[i * 3 + 2], trns[i]])
+                                .flatten()
+                                .collect(),
+                        )
+                        .into(),
+                        None => ImageRgb8::from_raw(
+                            size,
+                            buf.into_iter()
+                                .map(|i| i as usize)
+                                .map(|i| [pal[i * 3], pal[i * 3 + 1], pal[i * 3 + 2]])
+                                .flatten()
+                                .collect(),
+                        )
+                        .into(),
+                    }
                 }
             }),
             BitDepth::Sixteen => {
