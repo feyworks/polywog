@@ -1,8 +1,7 @@
 use std::ops::Deref;
 use std::rc::Rc;
 
-use kero::gfx::{SubTexture, Texture};
-use kero::math::{RectF, Vec2F};
+use kero::prelude::*;
 
 /// A single renderable sprite.
 #[derive(Debug, Clone)]
@@ -23,6 +22,28 @@ impl Sprite {
     #[inline]
     pub fn new(texture: Texture, rect: RectF) -> Self {
         Self::from(SubTexture::new(texture, rect))
+    }
+
+    #[inline]
+    pub fn draw_flipped(
+        &self,
+        draw: &mut Draw,
+        pos: impl Into<Vec2F>,
+        color: Rgba8,
+        mode: ColorMode,
+        flip: impl Into<Vec2<bool>>,
+    ) {
+        draw.subtexture_at_flipped(&self.0, pos, color, mode, flip);
+    }
+
+    #[inline]
+    pub fn draw_ext(&self, draw: &mut Draw, pos: impl Into<Vec2F>, color: Rgba8, mode: ColorMode) {
+        draw.subtexture_at_ext(&self.0, pos, color, mode);
+    }
+
+    #[inline]
+    pub fn draw(&self, draw: &mut Draw, pos: impl Into<Vec2F>) {
+        draw.subtexture_at(&self.0, pos);
     }
 }
 
