@@ -1,71 +1,57 @@
-use crate::SpriteGlyph;
 use fnv::FnvHashMap;
 use kero::prelude::*;
-use std::rc::Rc;
 
+use crate::SpriteGlyph;
+
+// A collection of glyphs to be rendered as text.
+///
+/// In addition to glyphs, fonts come with metrics that are
+/// used to print out text correctly (eg. advance, kerning, etc.)
 #[derive(Debug, Clone)]
-pub struct SpriteFont(Rc<Inner>);
-
-#[derive(Debug)]
-struct Inner {
-    ascent: f32,
-    descent: f32,
-    line_gap: f32,
-    glyphs: FnvHashMap<char, SpriteGlyph>,
-    kerning: FnvHashMap<(char, char), f32>,
+pub struct SpriteFont {
+    pub ascent: f32,
+    pub descent: f32,
+    pub line_gap: f32,
+    pub glyphs: FnvHashMap<char, SpriteGlyph>,
+    pub kerning: FnvHashMap<(char, char), f32>,
 }
 
 impl SpriteFont {
-    pub fn new(
-        ascent: f32,
-        descent: f32,
-        line_gap: f32,
-        glyphs: FnvHashMap<char, SpriteGlyph>,
-        kerning: FnvHashMap<(char, char), f32>,
-    ) -> Self {
-        Self(Rc::new(Inner {
+    pub const DEFAULT_CHARS: &'static str = " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789*+=-–—<>_#&@%^~$.,!¡?¿:;`'\"‘’“”«»|/\\()[]{}ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜàáâãäåæçèéêëìíîïñòóôõöùúûüŸÿßẞŒœ‚„°©®™¢€£¥•…‹›";
+
+    /// Create a new empty font.
+    pub fn new(ascent: f32, descent: f32, line_gap: f32) -> Self {
+        Self {
             ascent,
             descent,
             line_gap,
-            glyphs,
-            kerning,
-        }))
+            glyphs: FnvHashMap::default(),
+            kerning: FnvHashMap::default(),
+        }
     }
 
-    #[inline]
-    pub fn ascent(&self) -> f32 {
-        self.0.ascent
-    }
-
-    #[inline]
-    pub fn descent(&self) -> f32 {
-        self.0.descent
-    }
-
+    /// The font's height.
     #[inline]
     pub fn height(&self) -> f32 {
-        self.0.ascent - self.0.descent
+        self.ascent - self.descent
     }
 
     /// The font's line-height.
     #[inline]
     pub fn line_height(&self) -> f32 {
-        self.height() + self.0.line_gap
+        self.height() + self.line_gap
     }
 
-    #[inline]
-    pub fn line_gap(&self) -> f32 {
-        self.0.line_gap
-    }
-
+    /// Get a reference to the glyph corresponding to the provided character.
     #[inline]
     pub fn glyph(&self, chr: char) -> Option<&SpriteGlyph> {
-        self.0.glyphs.get(&chr)
+        self.glyphs.get(&chr)
     }
 
+    /// Get the kerning value for the left-right character pair.
     #[inline]
-    pub fn kerning(&self, left: char, right: char) -> f32 {
-        self.0.kerning.get(&(left, right)).copied().unwrap_or(0.0)
+    pub fn kerning(&self, left: char, right: char) -> Option<f32> {
+        self.kerning.get(&(left, right)).copied()
     }
 
     /// Get the width of the provided text when rendered in this font.
@@ -77,8 +63,8 @@ impl SpriteFont {
             if chr == '\n' {
                 max_w = max_w.max(w);
                 w = 0.0
-            } else if let Some(g) = self.0.glyphs.get(&chr) {
-                w += g.advance();
+            } else if let Some(g) = self.glyphs.get(&chr) {
+                w += g.get().advance;
             }
         }
         max_w.max(w)
@@ -95,7 +81,7 @@ impl SpriteFont {
 
     /// Get the size of the provided text when rendered in this font.
     #[inline]
-    pub fn text_size(&self, text: &str, use_line_gap: bool) -> Vec2F {
+    pub fn text_size(&self, text: &str, use_line_gap: bool) -> Vec2<f32> {
         vec2(self.text_width(text), self.text_height(text, use_line_gap))
     }
 
@@ -126,8 +112,8 @@ impl SpriteFont {
         lines
     }
 
-    pub fn draw_text_ext(
-        &mut self,
+    pub fn draw_ext(
+        &self,
         draw: &mut Draw,
         text: &str,
         pos: impl Into<Vec2F>,
@@ -140,19 +126,18 @@ impl SpriteFont {
             if chr == '\n' {
                 pos.x = left;
                 pos.y += self.line_height();
-            } else if let Some(g) = self.glyph(chr).or_else(|| self.glyph('\0')) {
-                if let Some(sub) = g.sub() {
-                    draw.subtexture_at_ext(sub, pos, color, mode);
+            } else if let Some(g) = self.glyphs.get(&chr).or_else(|| self.glyphs.get(&'\0')) {
+                if let Some(spr) = g.sprite.as_ref() {
+                    spr.draw_ext(draw, pos, color, mode);
                 }
-                pos.x += g.advance();
+                pos.x += g.advance;
             } else {
                 println!("no glyph for: [{}]", chr);
             }
         }
     }
 
-    #[inline]
-    pub fn draw_text(&mut self, draw: &mut Draw, text: &str, pos: impl Into<Vec2F>, color: Rgba8) {
-        self.draw_text_ext(draw, text, pos, color, ColorMode::MULT);
+    pub fn draw(&self, draw: &mut Draw, text: &str, pos: impl Into<Vec2F>, color: Rgba8) {
+        self.draw_ext(draw, text, pos, color, ColorMode::MULT);
     }
 }

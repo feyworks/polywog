@@ -1,21 +1,22 @@
 use kero::prelude::*;
-use std::rc::Rc;
+use std::ops::Deref;
 
+// A sub-texture split into 9 parts that can be used to draw
+/// resizable rectangular objects (for example, UI panels).
 #[derive(Debug, Clone)]
-pub struct SpritePatch(Rc<Inner>);
-
-#[derive(Debug)]
-struct Inner {
-    texture: Texture,
-    left_w: f32,
-    right_w: f32,
-    top_h: f32,
-    bottom_h: f32,
-    tx: [f32; 4],
-    ty: [f32; 4],
+pub struct SpritePatch {
+    pub texture: Texture,
+    pub left_w: f32,
+    pub right_w: f32,
+    pub top_h: f32,
+    pub bottom_h: f32,
+    pub tx: [f32; 4],
+    pub ty: [f32; 4],
 }
 
 impl SpritePatch {
+    /// Create a new patch, using the `inner` rectangle to split the
+    /// `outer` rectangle into 9 sub-rectangles.
     pub fn new(texture: Texture, outer: RectF, inner: RectF) -> Self {
         let x = [outer.x, inner.x, inner.right(), outer.right()];
         let y = [outer.y, inner.y, inner.bottom(), outer.bottom()];
@@ -29,7 +30,7 @@ impl SpritePatch {
         let tx = x.map(|x| x / size.x);
         let ty = y.map(|y| y / size.y);
 
-        Self(Rc::new(Inner {
+        Self {
             texture,
             left_w,
             right_w,
@@ -37,37 +38,33 @@ impl SpritePatch {
             bottom_h,
             tx,
             ty,
-        }))
+        }
     }
 
-    #[inline]
-    pub fn texture(&self) -> &Texture {
-        &self.0.texture
-    }
-
-    pub fn draw_ext(&mut self, draw: &mut Draw, rect: RectF, color: Rgba8, mode: ColorMode) {
+    pub fn draw(&self, draw: &mut Draw, rect: impl Into<RectF>, color: Rgba8, mode: ColorMode) {
+        let rect = rect.into();
         let px = [
             rect.x,
-            rect.x + self.0.left_w,
-            rect.right() - self.0.right_w,
+            rect.x + self.left_w,
+            rect.right() - self.right_w,
             rect.right(),
         ];
         let py = [
             rect.y,
-            rect.y + self.0.top_h,
-            rect.bottom() - self.0.bottom_h,
+            rect.y + self.top_h,
+            rect.bottom() - self.bottom_h,
             rect.bottom(),
         ];
         let vert = |i, j| {
             Vertex::new(
                 vec2(px[i], py[j]),
-                vec2(self.0.tx[i], self.0.ty[j]),
+                vec2(self.tx[i], self.ty[j]),
                 color,
                 mode,
             )
         };
         draw.custom(
-            Some(self.texture().clone()),
+            Some(self.texture.clone()),
             Topology::Triangles,
             [
                 vert(0, 0),
@@ -93,10 +90,5 @@ impl SpritePatch {
                 15, 10, 15, 14,
             ],
         );
-    }
-
-    #[inline]
-    pub fn draw(&mut self, draw: &mut Draw, rect: RectF) {
-        self.draw_ext(draw, rect, Rgba8::WHITE, ColorMode::MULT);
     }
 }

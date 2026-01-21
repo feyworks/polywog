@@ -1134,8 +1134,12 @@ dependencies = [
 name = "kero_spr"
 version = "0.1.0"
 dependencies = [
+ "fey_ase",
+ "fey_lua",
  "fnv",
  "kero",
+ "mlua",
+ "serde",
 ]
 
 [[package]]
