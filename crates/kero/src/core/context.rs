@@ -32,7 +32,6 @@ pub struct ContextData {
     pub reload_lua: Cell<bool>,
 
     pub quit_requested: Cell<bool>,
-
     pub dirs: ProjectDirs,
 }
 

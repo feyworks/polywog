@@ -104,6 +104,9 @@ impl<G: Game> ApplicationHandler for AppHandler<G> {
             dirs,
         }));
 
+        // create the frame timer
+        let timer = FrameTimer::new(ctx.time.0.clone());
+
         #[cfg(feature = "lua")]
         let lua_app = crate::core::LuaApp::new(opts.lua.clone(), &ctx);
 
@@ -115,7 +118,7 @@ impl<G: Game> ApplicationHandler for AppHandler<G> {
         self.state = AppState::Running {
             ctx,
             draw,
-            timer: FrameTimer::new(None),
+            timer,
             size,
             game,
             has_updated: false,
@@ -205,11 +208,8 @@ impl<G: Game> ApplicationHandler for AppHandler<G> {
             WindowEvent::RedrawRequested => {
                 let monitor = ctx.window.monitor();
 
-                timer.tick(monitor, |time| {
+                timer.tick(monitor, || {
                     *has_updated = true;
-
-                    // update time
-                    ctx.time.set_state(time);
 
                     // update gamepad input
                     ctx.gamepads.update(ctx);

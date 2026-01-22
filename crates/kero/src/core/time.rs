@@ -9,7 +9,7 @@ use std::rc::Rc;
 ///
 /// Obtained from [`Context`](super::Context).
 #[derive(Clone)]
-pub struct Time(Rc<TimeState>);
+pub struct Time(pub(crate) Rc<TimeState>);
 
 impl Debug for Time {
     #[inline]
@@ -20,17 +20,24 @@ impl Debug for Time {
 
 #[derive(Debug, Clone)]
 pub(crate) struct TimeState {
+    pub target_fps: Cell<Option<f64>>,
+    pub max_frame_skip: Cell<u32>,
     pub fps: Cell<u32>,
     pub delta: Cell<f32>,
+    pub unfixed_delta: Cell<f32>,
     pub since_startup: Cell<f32>,
     pub frame: Cell<u64>,
 }
 
 impl Default for TimeState {
+    #[inline]
     fn default() -> Self {
         Self {
+            target_fps: Cell::new(Some(60.0)),
+            max_frame_skip: Cell::new(0),
             fps: Cell::new(60),
             delta: Cell::new(1.0 / 60.0),
+            unfixed_delta: Cell::new(0.0),
             since_startup: Cell::new(0.0),
             frame: Cell::new(0),
         }
@@ -42,11 +49,24 @@ impl Time {
         Self(Rc::new(TimeState::default()))
     }
 
-    pub(crate) fn set_state(&self, state: TimeState) {
-        self.0.fps.set(state.fps.get());
-        self.0.delta.set(state.delta.get());
-        self.0.since_startup.set(state.since_startup.get());
-        self.0.frame.set(state.frame.get());
+    #[inline]
+    pub fn target_fps(&self) -> Option<f64> {
+        self.0.target_fps.get()
+    }
+
+    #[inline]
+    pub fn set_target_fps(&self, fps: Option<f64>) {
+        self.0.target_fps.set(fps);
+    }
+
+    #[inline]
+    pub fn max_frame_skip(&self) -> u32 {
+        self.0.max_frame_skip.get()
+    }
+
+    #[inline]
+    pub fn set_max_frame_skip(&self, max: u32) {
+        self.0.max_frame_skip.set(max);
     }
 
     /// FPS the app is running at.
@@ -59,6 +79,12 @@ impl Time {
     #[inline]
     pub fn delta(&self) -> f32 {
         self.0.delta.get()
+    }
+
+    /// Unfixed duration since last frame, in seconds.
+    #[inline]
+    pub fn unfixed_delta(&self) -> f32 {
+        self.0.unfixed_delta.get()
     }
 
     /// Total time since app startup, in seconds.
