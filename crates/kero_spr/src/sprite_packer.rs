@@ -1,13 +1,13 @@
 use crate::{
-    AnimCel, AnimFrame, AnimLayer, AnimTag, AtlasAnim, AtlasCel, AtlasFont, AtlasGlyph, AtlasPatch,
-    AtlasSheet, AtlasSprite, AtlasTile, SpriteAtlas,
+    AnimCel, AnimFrame, AnimLayer, AnimTag, AtlasAnim, AtlasCel, AtlasFont, AtlasGlyph,
+    AtlasGraphicsMapped, AtlasPatch, AtlasSheet, AtlasSprite, AtlasTile, SpriteAtlas,
 };
 use fey_ase::{Ase, CelType, Format};
 use fey_font::{Font as FeyFont, FontError};
 use fey_packer::{Item, Packed, RectPacker};
 use fnv::FnvHashMap;
 use kero::prelude::*;
-use std::hash::{DefaultHasher, Hasher};
+use std::hash::{DefaultHasher, Hash, Hasher};
 use std::path::Path;
 
 /// Packs sprites, sheets, fonts, etc. into an atlas.
@@ -21,7 +21,7 @@ pub struct SpritePacker<I> {
     anims: Vec<PackAnim<I>>,
 }
 
-impl<I> SpritePacker<I> {
+impl<I: Hash + Eq> SpritePacker<I> {
     /// Create a new packer.
     pub fn new() -> Self {
         Self {
@@ -95,9 +95,10 @@ impl<I> SpritePacker<I> {
         &mut self,
         id: I,
         img: ImageRgba8,
-        tile_size: Vec2U,
+        tile_size: impl Into<Vec2U>,
         trim_threshold: Option<u8>,
     ) {
+        let tile_size = tile_size.into();
         if (img.size() / tile_size) * tile_size != img.size() {
             println!(
                 "img size {} is not multiple of tile size {}",
@@ -129,7 +130,7 @@ impl<I> SpritePacker<I> {
         id: I,
         path: impl AsRef<Path>,
         premultiply: bool,
-        tile_size: Vec2U,
+        tile_size: impl Into<Vec2U>,
         trim_threshold: Option<u8>,
     ) -> Result<(), ImageError> {
         let mut img = DynImage::load_png_from_file(path)?.to_rgba8();
@@ -197,8 +198,9 @@ impl<I> SpritePacker<I> {
     }
 
     /// Add a 9-patch to be packed.
-    pub fn add_patch(&mut self, id: I, img: ImageRgba8, inner: RectU) {
+    pub fn add_patch(&mut self, id: I, img: ImageRgba8, inner: impl Into<RectU>) {
         let img = self.add_image(img, None, Vec2::ZERO);
+        let inner = inner.into();
         self.patches.push(PackPatch { id, img, inner });
     }
 
@@ -208,7 +210,7 @@ impl<I> SpritePacker<I> {
         id: I,
         path: impl AsRef<Path>,
         premultiply: bool,
-        inner: RectU,
+        inner: impl Into<RectU>,
     ) -> Result<(), ImageError> {
         let mut img = DynImage::load_png_from_file(path)?.to_rgba8();
         if premultiply {
@@ -326,14 +328,27 @@ impl<I> SpritePacker<I> {
 
     /// Add an aseprite animation to be packed from a file. The individual cels of the animation
     /// will be packed individually to better fit them into the atlas.
-    pub fn add_ase_file(&mut self, id: I, path: impl AsRef<Path>) -> Result<(), fey_ase::Error> {
-        let ase = Ase::from_file(path)?;
+    pub fn add_ase_file(&mut self, id: I, path: impl AsRef<Path>) -> Result<(), GameError> {
+        let ase = Ase::from_file(path).map_err(GameError::custom)?;
         self.add_ase(id, &ase);
         Ok(())
     }
 
     /// Pack all the items into a sprite atlas.
-    pub fn pack(&mut self, max_size: u32) -> Option<(ImageRgba8, SpriteAtlas<I>)> {
+    pub fn pack_graphics(
+        &mut self,
+        max_size: u32,
+        gfx: &Graphics,
+    ) -> Result<AtlasGraphicsMapped<I>, GameError> {
+        let (img, atlas) = self
+            .pack_atlas(max_size)
+            .ok_or_else(|| GameError::custom("failed to pack atlas"))?;
+        let tex = gfx.create_texture_from_img(&img);
+        Ok(atlas.create_graphics(tex).mapped())
+    }
+
+    /// Pack all the items into a sprite atlas.
+    pub fn pack_atlas(&mut self, max_size: u32) -> Option<(ImageRgba8, SpriteAtlas<I>)> {
         let (size, mut packed) = RectPacker::new()
             .with_max_size(max_size)
             .with_spacing(1)

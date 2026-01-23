@@ -40,7 +40,11 @@ impl SpritePatch {
         }
     }
 
-    pub fn draw(&self, draw: &mut Draw, rect: impl Into<RectF>, color: Rgba8, mode: ColorMode) {
+    pub fn draw(&self, draw: &mut Draw, rect: impl Into<RectF>) {
+        self.draw_ext(draw, rect, Rgba8::WHITE, ColorMode::MULT);
+    }
+
+    pub fn draw_ext(&self, draw: &mut Draw, rect: impl Into<RectF>, color: Rgba8, mode: ColorMode) {
         let rect = rect.into();
         let px = [
             rect.x,

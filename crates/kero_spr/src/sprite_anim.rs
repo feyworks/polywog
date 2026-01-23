@@ -75,8 +75,8 @@ impl SpriteAnim {
         &self,
         draw: &mut Draw,
         frame_index: usize,
-        layers: u64,
         pos: impl Into<Vec2F>,
+        layers: u64,
         color: Rgba8,
         mode: ColorMode,
     ) {
@@ -90,14 +90,15 @@ impl SpriteAnim {
     }
 
     #[inline]
-    pub fn draw(&self, draw: &mut Draw, frame_index: usize, layers: u64, pos: impl Into<Vec2F>) {
-        let pos = pos.into();
-        let f = &self.frames[frame_index % self.frames.len()];
-        for cel in &f.cels {
-            if (layers & (1 << cel.layer)) != 0 {
-                self.sprites[cel.index].draw(draw, pos);
-            }
-        }
+    pub fn draw(&self, draw: &mut Draw, frame_index: usize, pos: impl Into<Vec2F>) {
+        self.draw_ext(
+            draw,
+            frame_index,
+            pos,
+            u64::MAX,
+            Rgba8::WHITE,
+            ColorMode::MULT,
+        );
     }
 
     /// Index of the layer with the name.
