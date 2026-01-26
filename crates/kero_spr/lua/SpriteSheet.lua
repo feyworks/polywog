@@ -9,7 +9,37 @@ local module = {}
 ---@class SpriteSheetMethods
 local methods = {}
 
----Draw a tile from the sheet.
+---How many columns the sheet has.
+---@param self SpriteSheet
+---@return integer
+---@nodiscard
+function methods.cols(self) end
+
+---How many rows the sheet has.
+---@param self SpriteSheet
+---@return integer
+---@nodiscard
+function methods.rows(self) end
+
+---Width of a single tile.
+---@param self SpriteSheet
+---@return number
+---@nodiscard
+function methods.tile_w(self) end
+
+---Height of a single tile.
+---@param self SpriteSheet
+---@return number
+---@nodiscard
+function methods.tile_h(self) end
+
+---Size of a single tile.
+---@param self SpriteSheet
+---@return Vec2
+---@nodiscard
+function methods.tile_size(self) end
+
+---Draw a tile from (`col, row`) of the sheet.
 ---@param self SpriteSheet
 ---@param col integer
 ---@param row integer

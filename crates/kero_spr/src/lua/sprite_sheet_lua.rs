@@ -31,6 +31,11 @@ impl UserData for SpriteSheet {
 }
 
 fn add_methods<T, M: UserDataMethods<T>>(methods: &mut M) {
+    methods.add_function("cols", |_, this: SpriteSheetRef| Ok(this.tiles.width()));
+    methods.add_function("rows", |_, this: SpriteSheetRef| Ok(this.tiles.height()));
+    methods.add_function("tile_w", |_, this: SpriteSheetRef| Ok(this.tile_size.x));
+    methods.add_function("tile_h", |_, this: SpriteSheetRef| Ok(this.tile_size.y));
+    methods.add_function("tile_size", |_, this: SpriteSheetRef| Ok(this.tile_size));
     methods.add_function(
         "draw_tile",
         |lua,
