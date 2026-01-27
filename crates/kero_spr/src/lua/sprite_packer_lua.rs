@@ -5,8 +5,6 @@ use mlua::prelude::{LuaError, LuaResult};
 use mlua::{
     BorrowedStr, Either, Lua, UserData, UserDataMethods, UserDataRef, UserDataRefMut, Value,
 };
-use std::ffi::OsStr;
-use std::path::{Path, PathBuf};
 
 pub struct SpritePackerModule;
 
@@ -141,21 +139,41 @@ fn add_methods<T, M: UserDataMethods<T>>(methods: &mut M) {
     methods.add_function(
         "add_patch",
         |_,
-         (mut this, id, file, premult, inner): (
+         (mut this, id, file, premult, x, y, w, h): (
             SpritePackerMut,
             String,
             BorrowedStr,
             bool,
-            RectF,
+            Either<RectF, u32>,
+            Option<u32>,
+            Option<u32>,
+            Option<u32>,
         )| {
-            this.add_patch_file(id, file.as_ref(), premult, inner.to_u32())
+            let inner = match x {
+                Either::Left(inner) => inner.to_u32(),
+                Either::Right(x) => rect(x, y.unwrap(), w.unwrap(), h.unwrap()),
+            };
+            this.add_patch_file(id, file.as_ref(), premult, inner)
                 .map_err(LuaError::external)
         },
     );
     methods.add_function(
         "add_patches_in",
-        |_, (mut this, dir, premult, inner): (SpritePackerMut, BorrowedStr, bool, RectF)| {
-            this.add_patch_files(dir.as_ref(), premult, inner.to_u32())
+        |_,
+         (mut this, dir, premult, x, y, w, h): (
+            SpritePackerMut,
+            BorrowedStr,
+            bool,
+            Either<RectF, u32>,
+            Option<u32>,
+            Option<u32>,
+            Option<u32>,
+        )| {
+            let inner = match x {
+                Either::Left(inner) => inner.to_u32(),
+                Either::Right(x) => rect(x, y.unwrap(), w.unwrap(), h.unwrap()),
+            };
+            this.add_patch_files(dir.as_ref(), premult, inner)
                 .map_err(LuaError::external)
         },
     );

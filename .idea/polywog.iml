@@ -42,6 +42,7 @@
       <sourceFolder url="file://$MODULE_DIR$/crates/kero_spr/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/crates/kero_spr/examples" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/crates/kero_spr/examples/basics/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/kero_spr/examples/basics_lua/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />

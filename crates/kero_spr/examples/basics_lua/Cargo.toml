@@ -1,0 +1,8 @@
+[package]
+name = "basics_lua"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+kero = { version = "0.1.11", path = "../../../kero", features = ["lua"] }
+kero_spr = { version = "0.1.0", path = "../..", features = ["lua"] }

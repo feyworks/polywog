@@ -89,6 +89,17 @@ function methods.add_fonts_in(self, directory, size, chars) end
 ---@param inner Rect
 function methods.add_patch(self, id, file, premultiply, inner) end
 
+---Add a 9-patch to be packed.
+---@param self SpritePacker
+---@param id string
+---@param file string
+---@param premultiply boolean
+---@param inner_x number
+---@param inner_y number
+---@param inner_w number
+---@param inner_h number
+function methods.add_patch(self, id, file, premultiply, inner_x, inner_y, inner_w, inner_h) end
+
 ---Adds all images found in the directory as patches. Their IDs will be set
 ---to their filenames without extensions.
 ---@param self SpritePacker
@@ -96,6 +107,17 @@ function methods.add_patch(self, id, file, premultiply, inner) end
 ---@param premultiply boolean
 ---@param inner Rect
 function methods.add_patches_in(self, directory, premultiply, inner) end
+
+---Adds all images found in the directory as patches. Their IDs will be set
+---to their filenames without extensions.
+---@param self SpritePacker
+---@param directory string
+---@param premultiply boolean
+---@param inner_x number
+---@param inner_y number
+---@param inner_w number
+---@param inner_h number
+function methods.add_patches_in(self, directory, premultiply, inner_x, inner_y, inner_w, inner_h) end
 
 ---Add an aseprite animation to be packed. The cels of the animation will be
 ---packed individually to better fit them into the atlas.

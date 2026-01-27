@@ -1,4 +1,4 @@
-use crate::{DynImage, Image, ImageError, ImageFormat};
+use crate::{DynImage, Image, ImageFormat};
 use fey_color::{Channel, Grey, GreyAlpha, Rgb, Rgba, Rgba8, ToRgb, ToRgba, grey, grey_alpha};
 use fey_grid::{Grid, GridMut};
 use fey_lua::{LuaModule, UserDataOf};

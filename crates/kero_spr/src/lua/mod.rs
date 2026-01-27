@@ -11,3 +11,12 @@ pub use sprite_lua::*;
 pub use sprite_packer_lua::*;
 pub use sprite_patch_lua::*;
 pub use sprite_sheet_lua::*;
+
+pub type SprModules = (
+    SpriteAnimModule,
+    SpriteFontModule,
+    SpriteModule,
+    SpritePackerModule,
+    SpritePatchModule,
+    SpriteSheetModule,
+);
