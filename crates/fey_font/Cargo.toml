@@ -1,6 +1,6 @@
 [package]
 name = "fey_font"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2024"
 authors.workspace = true
 license.workspace = true
@@ -12,6 +12,6 @@ description = "Font loading and glyph rasterization."
 ab_glyph = "0.2.32"
 fey_color = { version = "0.1.0", path = "../fey_color" }
 fey_grid = { version = "0.1.0", path = "../fey_grid" }
-fey_img = { version = "0.1.0", path = "../fey_img" }
+fey_img = { version = "0.2.0", path = "../fey_img" }
 fey_math = { version = "0.1.0", path = "../fey_math" }
 thiserror = "2.0.17"

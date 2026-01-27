@@ -678,7 +678,7 @@ dependencies = [
 
 [[package]]
 name = "fey_font"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "ab_glyph",
  "fey_color",
@@ -708,7 +708,7 @@ dependencies = [
 
 [[package]]
 name = "fey_img"
-version = "0.1.1"
+version = "0.2.0"
 dependencies = [
  "bytemuck",
  "fey_color",
