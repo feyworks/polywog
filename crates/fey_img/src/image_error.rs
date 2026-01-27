@@ -17,4 +17,7 @@ pub enum ImageError {
 
     #[error("unsupported PNG bit-depth: {0}")]
     UnsupportedBitDepth(usize),
+
+    #[error("unsupported or missing file extension: {0:?}")]
+    UnsupportedExtension(String),
 }

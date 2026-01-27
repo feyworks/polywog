@@ -4,7 +4,7 @@ use fey_grid::Grid;
 use fey_math::{Numeric, Vec2U, vec2};
 use qoi::Channels;
 use std::fs::File;
-use std::io::{BufReader, Read, Write};
+use std::io::{BufReader, Cursor, Read, Write};
 use std::path::Path;
 
 impl DynImage {
@@ -25,6 +25,11 @@ impl DynImage {
     #[inline]
     pub fn load_qoi_from_file(path: impl AsRef<Path>) -> Result<Self, ImageError> {
         Self::load_qoi(BufReader::new(File::open(path)?))
+    }
+
+    /// Load a QOI image from in-memory bytes.
+    pub fn load_qoi_from_memory(bytes: &[u8]) -> Result<Self, ImageError> {
+        Self::load_qoi(Cursor::new(bytes))
     }
 }
 

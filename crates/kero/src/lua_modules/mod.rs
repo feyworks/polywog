@@ -32,6 +32,7 @@ pub use gamepad_lua::*;
 pub use index_buffer_lua::*;
 pub use key_lua::*;
 pub use keyboard_lua::*;
+use mlua::prelude::LuaError;
 pub use monitor_lua::*;
 pub use mouse_button_lua::*;
 pub use mouse_lua::*;
@@ -46,3 +47,10 @@ pub use vertex_buffer_lua::*;
 pub use vertex_lua::*;
 pub use video_mode_lua::*;
 pub use window_lua::*;
+
+impl Into<LuaError> for crate::core::GameError {
+    #[inline]
+    fn into(self) -> LuaError {
+        LuaError::external(self)
+    }
+}

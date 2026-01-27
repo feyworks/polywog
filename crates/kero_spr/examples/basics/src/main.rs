@@ -31,10 +31,10 @@ impl Game for BasicsExample {
 
         let mut packer = SpritePacker::new();
         packer.add_ase_file("player", "assets/player.aseprite")?;
-        packer.add_sprite_png("portrait", "assets/portrait.png", true, Some(0))?;
-        packer.add_sheet_png("tiles", "assets/tiles.png", true, (16, 16), Some(0))?;
-        packer.add_patch_png("textbox", "assets/textbox.png", true, (8, 8, 16, 16))?;
-        packer.add_font_ttf("virtue", "assets/virtue.ttf", 16.0, BASIC_LATIN.chars())?;
+        packer.add_sprite_file("portrait", "assets/portrait.png", true, Some(0))?;
+        packer.add_sheet_file("tiles", "assets/tiles.png", true, (16, 16), Some(0))?;
+        packer.add_patch_file("textbox", "assets/textbox.png", true, (8, 8, 16, 16))?;
+        packer.add_font_file("virtue", "assets/virtue.ttf", 16.0, BASIC_LATIN.chars())?;
 
         let mut atlas = packer.pack_graphics(4096, &ctx.graphics)?;
         let player = atlas.anims.remove("player").unwrap();

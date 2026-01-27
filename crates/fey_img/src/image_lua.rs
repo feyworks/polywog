@@ -1,4 +1,4 @@
-use crate::{DynImage, Image, ImageFormat};
+use crate::{DynImage, Image, ImageError, ImageFormat};
 use fey_color::{Channel, Grey, GreyAlpha, Rgb, Rgba, Rgba8, ToRgb, ToRgba, grey, grey_alpha};
 use fey_grid::{Grid, GridMut};
 use fey_lua::{LuaModule, UserDataOf};
@@ -10,7 +10,7 @@ use mlua::{
 };
 use std::ops::{Deref, DerefMut};
 
-pub type DynImageData = UserDataOf<DynImage>;
+pub type DynImageObj = UserDataOf<DynImage>;
 pub type DynImageRef = UserDataRef<DynImage>;
 pub type DynImageMut = UserDataRefMut<DynImage>;
 

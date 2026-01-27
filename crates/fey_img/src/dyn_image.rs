@@ -7,6 +7,7 @@ use fey_color::ToRgba;
 use fey_grid::Grid;
 use fey_math::{Vec2U, vec2};
 use png::{BitDepth, ColorType, Decoder};
+use std::ffi::OsStr;
 use std::fs::File;
 use std::io::{BufReader, Cursor, Read, Seek};
 use std::path::Path;
@@ -108,6 +109,17 @@ impl DynImage {
             Self::Rgba8(img) => img,
             Self::Rgba16(img) => img.map(|p| p.to_rgba()),
             Self::Rgba32F(img) => img.map(|p| p.to_rgba()),
+        }
+    }
+
+    /// Load a PNG or QOI file.
+    pub fn load_file<P: AsRef<Path>>(path: P) -> Result<Self, ImageError> {
+        match path.as_ref().extension() {
+            Some(ext) if ext.to_str() == Some("png") => Self::load_png_from_file(path),
+            Some(ext) if ext.to_str() == Some("qoi") => Self::load_qoi_from_file(path),
+            ext => Err(ImageError::UnsupportedExtension(
+                ext.and_then(OsStr::to_str).unwrap_or("").to_string(),
+            )),
         }
     }
 

@@ -7,8 +7,9 @@ use fey_font::{Font as FeyFont, FontError};
 use fey_packer::{Item, Packed, RectPacker};
 use fnv::FnvHashMap;
 use kero::prelude::*;
+use std::ffi::OsStr;
 use std::hash::{DefaultHasher, Hash, Hasher};
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 /// Packs sprites, sheets, fonts, etc. into an atlas.
 pub struct SpritePacker<I> {
@@ -73,15 +74,15 @@ impl<I: Hash + Eq> SpritePacker<I> {
         self.sprites.push(PackSprite { id, img });
     }
 
-    /// Add a sprite (a single image) to be packed from a PNG file.
-    pub fn add_sprite_png(
+    /// Add a sprite (a single image) to be packed from a PNG/QOI file.
+    pub fn add_sprite_file(
         &mut self,
         id: I,
         path: impl AsRef<Path>,
         premultiply: bool,
         trim_threshold: Option<u8>,
     ) -> Result<(), ImageError> {
-        let mut img = DynImage::load_png_from_file(path)?.to_rgba8();
+        let mut img = DynImage::load_file(path)?.to_rgba8();
         if premultiply {
             img.premultiply();
         }
@@ -123,9 +124,9 @@ impl<I: Hash + Eq> SpritePacker<I> {
         });
     }
 
-    /// Add a tile sheet to be packed from a PNG file. The sheet will be split up and tiles will be
-    /// individually packed in order to fit them in better.
-    pub fn add_sheet_png(
+    /// Add a tile sheet to be packed from a PNG/QOI file. The sheet will be split up and tiles will
+    /// be individually packed in order to fit them in better.
+    pub fn add_sheet_file(
         &mut self,
         id: I,
         path: impl AsRef<Path>,
@@ -133,7 +134,7 @@ impl<I: Hash + Eq> SpritePacker<I> {
         tile_size: impl Into<Vec2U>,
         trim_threshold: Option<u8>,
     ) -> Result<(), ImageError> {
-        let mut img = DynImage::load_png_from_file(path)?.to_rgba8();
+        let mut img = DynImage::load_file(path)?.to_rgba8();
         if premultiply {
             img.premultiply();
         }
@@ -184,8 +185,8 @@ impl<I: Hash + Eq> SpritePacker<I> {
         });
     }
 
-    /// Add a font to be packed from a TTF file. Each glyph will be packed individually.
-    pub fn add_font_ttf(
+    /// Add a font to be packed from a TTF/OTF file. Each glyph will be packed individually.
+    pub fn add_font_file(
         &mut self,
         id: I,
         path: impl AsRef<Path>,
@@ -204,15 +205,15 @@ impl<I: Hash + Eq> SpritePacker<I> {
         self.patches.push(PackPatch { id, img, inner });
     }
 
-    /// Add a 9-patch to be packed from a PNG file.
-    pub fn add_patch_png(
+    /// Add a 9-patch to be packed from a PNG/QOI file.
+    pub fn add_patch_file(
         &mut self,
         id: I,
         path: impl AsRef<Path>,
         premultiply: bool,
         inner: impl Into<RectU>,
     ) -> Result<(), ImageError> {
-        let mut img = DynImage::load_png_from_file(path)?.to_rgba8();
+        let mut img = DynImage::load_file(path)?.to_rgba8();
         if premultiply {
             img.premultiply();
         }
@@ -495,6 +496,79 @@ impl<I: Hash + Eq> SpritePacker<I> {
                 anims,
             },
         ))
+    }
+}
+
+#[inline]
+fn files(dir: impl AsRef<Path>) -> impl Iterator<Item = (PathBuf, String)> {
+    std::fs::read_dir(dir).unwrap().flatten().map(|file| {
+        let path = file.path();
+        let id = path
+            .file_stem()
+            .and_then(OsStr::to_str)
+            .unwrap()
+            .to_string();
+        (path, id)
+    })
+}
+
+impl SpritePacker<String> {
+    pub fn add_sprite_files(
+        &mut self,
+        directory: impl AsRef<Path>,
+        premultiply: bool,
+        trim_threshold: Option<u8>,
+    ) -> Result<(), ImageError> {
+        for (file, name) in files(directory) {
+            self.add_sprite_file(name, file, premultiply, trim_threshold)?;
+        }
+        Ok(())
+    }
+
+    pub fn add_sheet_files(
+        &mut self,
+        directory: impl AsRef<Path>,
+        premultiply: bool,
+        tile_size: impl Into<Vec2U>,
+        trim_threshold: Option<u8>,
+    ) -> Result<(), ImageError> {
+        let tile_size = tile_size.into();
+        for (file, name) in files(directory) {
+            self.add_sheet_file(name, file, premultiply, tile_size, trim_threshold)?;
+        }
+        Ok(())
+    }
+
+    pub fn add_ase_files(&mut self, directory: impl AsRef<Path>) -> Result<(), GameError> {
+        for (file, name) in files(directory) {
+            self.add_ase_file(name, file)?;
+        }
+        Ok(())
+    }
+
+    pub fn add_font_files(
+        &mut self,
+        directory: impl AsRef<Path>,
+        size: f32,
+        chars: impl IntoIterator<Item = char> + Clone,
+    ) -> Result<(), FontError> {
+        for (file, name) in files(directory) {
+            self.add_font_file(name, file, size, chars.clone())?;
+        }
+        Ok(())
+    }
+
+    pub fn add_patch_files(
+        &mut self,
+        directory: impl AsRef<Path>,
+        premultiply: bool,
+        inner: impl Into<RectU>,
+    ) -> Result<(), ImageError> {
+        let inner = inner.into();
+        for (file, name) in files(directory) {
+            self.add_patch_file(name, file, premultiply, inner)?;
+        }
+        Ok(())
     }
 }
 
