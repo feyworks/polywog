@@ -6,6 +6,8 @@ authors.workspace = true
 license.workspace = true
 repository.workspace = true
 rust-version.workspace = true
+readme = "README.md"
+description = "Variety of sprite rendering types for pixel art games made in Kero."
 
 [features]
 lua = ["dep:mlua", "dep:fey_lua", "kero/lua"]
