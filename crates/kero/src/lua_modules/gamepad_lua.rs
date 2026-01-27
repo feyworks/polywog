@@ -1,11 +1,11 @@
 use crate::core::Context;
 use crate::input::{Gamepad, GamepadAxis, GamepadButton, GamepadStatus};
 use crate::lua::LuaModule;
-use fey_lua::{create_fill, UserDataOf};
+use fey_lua::{UserDataOf, create_fill};
 use mlua::prelude::{LuaError, LuaResult};
 use mlua::{FromLua, IntoLua, Lua, Table, UserData, UserDataMethods, UserDataRef, Value};
 
-pub type GamepadData = UserDataOf<Gamepad>;
+pub type GamepadObj = UserDataOf<Gamepad>;
 pub type GamepadRef = UserDataRef<Gamepad>;
 
 pub struct GamepadModule;

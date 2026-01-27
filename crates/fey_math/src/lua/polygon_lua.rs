@@ -7,7 +7,7 @@ use mlua::prelude::LuaResult;
 use mlua::{Function, Lua, Table, UserData, UserDataMethods, UserDataRef, UserDataRefMut, Value};
 use std::ops::Deref;
 
-pub type PolygonData = UserDataOf<PolygonF>;
+pub type PolygonObj = UserDataOf<PolygonF>;
 pub type PolygonRef = UserDataRef<PolygonF>;
 pub type PolygonMut = UserDataRefMut<PolygonF>;
 

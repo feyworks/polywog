@@ -3,7 +3,7 @@ use mlua::prelude::LuaResult;
 use mlua::{Lua, UserData, UserDataMethods, UserDataRef, Value};
 use std::time::Instant;
 
-pub type InstantData = UserDataOf<LuaInstant>;
+pub type InstantObj = UserDataOf<LuaInstant>;
 pub type InstantRef = UserDataRef<LuaInstant>;
 
 pub struct InstantModule;

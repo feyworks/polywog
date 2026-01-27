@@ -8,7 +8,7 @@ use mlua::{
 
 pub struct SpritePackerModule;
 
-pub type SpritePackerData = UserDataOf<SpritePacker<String>>;
+pub type SpritePackerObj = UserDataOf<SpritePacker<String>>;
 pub type SpritePackerRef = UserDataRef<SpritePacker<String>>;
 pub type SpritePackerMut = UserDataRefMut<SpritePacker<String>>;
 
