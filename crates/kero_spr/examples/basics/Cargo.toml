@@ -4,5 +4,5 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-kero = { version = "0.1.11", path = "../../../kero" }
+kero = { version = "0.2.0", path = "../../../kero" }
 kero_spr = { version = "0.1.0", path = "../.." }

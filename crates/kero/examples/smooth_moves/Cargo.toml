@@ -7,4 +7,4 @@ license.workspace = true
 description = "Smooth movement example."
 
 [dependencies]
-kero = { version = "0.1.0", path = "../.." }
+kero = { version = "0.2.0", path = "../.." }
